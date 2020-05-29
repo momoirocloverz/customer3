@@ -133,7 +133,7 @@
                 })
             },
             clearStateAction(){
-                localStorage.webToken = undefined;
+                localStorage.removeItem('webToken');
                 this.$store.commit('reInitVuexData');
             },
             go(){

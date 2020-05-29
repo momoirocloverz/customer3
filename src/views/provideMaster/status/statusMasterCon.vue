@@ -399,9 +399,7 @@
             return {
                 balanceBridge:0,
                 anotherBalanceBridge:0,
-                payTypeInfoArray:[
-//                    {}
-                ],
+                payTypeInfoArray:[],
                 payTypeMap:{
                     1:'线下发放',
                     2:'线上发放-薪企云服',

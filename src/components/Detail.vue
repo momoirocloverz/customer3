@@ -3,7 +3,7 @@
         <el-dialog :title="detailInfo.title + '详情'" :visible.sync="showDetail" class="" width="450px" :close-on-click-modal="true" :before-close="close">
             <div class="">
                 <div class="flex-box detail-item">
-                    <span>员工姓名</span>
+                    <span>人员姓名</span>
                     <span>{{ detailInfo.talentName }}</span>
                 </div>
                 <div class="flex-box detail-item" v-show="!( ( detailInfo.type&&detailInfo.type != '系统使用费')&&(detailInfo.title&&detailInfo.title.includes('扣款')) )">

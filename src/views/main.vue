@@ -94,7 +94,7 @@ export default {
             haveAccount:false,
             menuList:[
                 {
-                    title:'员工收入明细',
+                    title:'人员收入明细',
                     index:'1',
                     iconClass:'icon-income',
                     children:[
@@ -165,9 +165,7 @@ export default {
             }
         },
         logOut(){
-            localStorage.webToken = undefined;
-            // localStorage.clear();
-            // sessionStorage.clear();
+            localStorage.removeItem('webToken');
             this.$store.commit('reInitVuexData');
             this.$router.push('/');
         },

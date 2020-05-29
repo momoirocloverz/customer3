@@ -41,7 +41,7 @@
             },
             go() {
                 this.$store.commit('setBreadcrumbList',[
-                    { title:"员工收入明细" },
+                    { title:"人员收入明细" },
                     { title:"生成待发放订单" },
                 ]);
                 this.$router.push({

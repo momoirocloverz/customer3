@@ -5,7 +5,7 @@
                 <el-select v-model="status" placeholder="发放状态" size="small" @change="statusChange">
                 <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
-                <el-input v-model="userName" size="small" placeholder="员工姓名" class="limitInput" clearable><el-button slot="append" icon="el-icon-search" @click="searchAction"></el-button></el-input>
+                <el-input v-model="userName" size="small" placeholder="人员姓名" class="limitInput" clearable><el-button slot="append" icon="el-icon-search" @click="searchAction"></el-button></el-input>
             </div>
             <div class="tableCon">
                 <div class="sumInfoCon">
@@ -14,7 +14,7 @@
                     </div>
                 </div>
                 <el-table :data="tableData"  style="width: 100%;margin-top:20px" empty-text="暂无相关信息">
-                    <el-table-column prop="talentName" label="员工姓名" ></el-table-column>
+                    <el-table-column prop="talentName" label="人员姓名" ></el-table-column>
                     <el-table-column prop="salary" label="排班收入(元)" ></el-table-column>
                     <el-table-column prop="rewardAndPublish" label="奖惩(元)" ></el-table-column>
                     <el-table-column prop="deduction" label="扣款(元)" ></el-table-column>
@@ -151,7 +151,7 @@
                 deduction:0,
                 salaryTotal:0,
                 id:'',
-                firstDescribe:'付款手续费1元/人，从员工收入中扣除，由管理费账户支付',
+                firstDescribe:'付款手续费1元/人，从人员收入中扣除，由管理费账户支付',
                 secondDescribe:'应发收入的1.5%，由管理费账户支付',
                 thirdDescribe:'应发收入的1%，由薪税公司账户支付',
                 fourthDescribe:'超出30000元/月/人会产生个人所得税，由薪税公司账户支付',

@@ -81,7 +81,7 @@ const _apiLists = {
             params
         })
     },
-    // 员工收入列表总和
+    // 人员收入列表总和
     getSalaryLists:(params)=>{
         return instance({
             method: 'get',
@@ -105,7 +105,7 @@ const _apiLists = {
             data,
         })
     },
-    // 员工收入列表总和已发
+    // 人员收入列表总和已发
     getAlready:(params)=>{
         return instance({
             method: 'get',
@@ -113,7 +113,7 @@ const _apiLists = {
             params,
         })
     },
-    // 员工收入列表总和已发按人汇总
+    // 人员收入列表总和已发按人汇总
     getByPopAlready:(params)=>{
         return instance({
             method: 'get',
@@ -121,7 +121,7 @@ const _apiLists = {
             params,
         })
     },
-    // 员工收入列表总和 查看详情
+    // 人员收入列表总和 查看详情
     getListByTalentId:(params)=>{
         return instance({
             method: 'get',
@@ -129,7 +129,7 @@ const _apiLists = {
             params,
         })
     },
-    // 员工收入列表总和已发 查看详情
+    // 人员收入列表总和已发 查看详情
     getAlreadyTalentId:(params)=>{
         return instance({
             method: 'get',
@@ -145,7 +145,7 @@ const _apiLists = {
             params,
         })
     },
-    // 获取员工列表
+    // 获取人员列表
     getBtalents:(params)=>{
         return instance({
             method: 'get',

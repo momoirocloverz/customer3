@@ -1,7 +1,7 @@
 <template>
     <div class="failedCon" v-loading="loading">
         <div class="topPart"  @keyup.enter="searchAction">
-           <el-input v-model="userName" size="small" placeholder="员工姓名" class="limitInput" clearable><el-button slot="append" icon="el-icon-search" @click="searchAction"></el-button></el-input>
+           <el-input v-model="userName" size="small" placeholder="人员姓名" class="limitInput" clearable><el-button slot="append" icon="el-icon-search" @click="searchAction"></el-button></el-input>
         </div>
         <div class="bottomPart">
             <div class="tableCon">
@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <el-table :data="tableData"  style="width: 100%;margin-top:20px" empty-text="暂无相关信息">
-                    <el-table-column prop="talentName" label="员工姓名" ></el-table-column>
+                    <el-table-column prop="talentName" label="人员姓名" ></el-table-column>
                     <el-table-column prop="salary" label="排班收入(元)" ></el-table-column>
                     <el-table-column prop="rewardAndPublish" label="奖惩(元)" ></el-table-column>
                     <el-table-column prop="deduction" label="扣款(元)" ></el-table-column>

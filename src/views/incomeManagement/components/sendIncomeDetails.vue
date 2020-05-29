@@ -18,7 +18,7 @@
                                 size="small"></el-date-picker>
             </div>
             <div class="right-search">
-                <el-input @keyup.enter.native="search()" v-model="params.talentName" class="" size="small" placeholder="员工姓名"
+                <el-input @keyup.enter.native="search()" v-model="params.talentName" class="" size="small" placeholder="人员姓名"
                           clearable>
                     <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                 </el-input>
@@ -35,7 +35,7 @@
         </div>
         <div class="tableCon">
             <el-table :data="tableData" style="width: 100%">
-                <el-table-column prop="talentName" label="员工姓名"></el-table-column>
+                <el-table-column prop="talentName" label="人员姓名"></el-table-column>
                 <el-table-column prop="type" :formatter="nameFor" label="收入明细类型"></el-table-column>
                 <el-table-column prop="salary" :formatter="moenyMatter" label="金额(元)"></el-table-column>
                 <el-table-column prop="taskName" label="任务名称" width="250" show-overflow-tooltip></el-table-column>

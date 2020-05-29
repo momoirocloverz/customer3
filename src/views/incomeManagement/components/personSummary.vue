@@ -2,7 +2,7 @@
     <div class="person-summary" v-loading="loading" element-loading-text="正在请求中...">
         <div class="topCon mt15">
             <div class="">
-                <el-input @keyup.enter.native="search()" v-model="params.talentName" class="" size="small" placeholder="员工姓名"
+                <el-input @keyup.enter.native="search()" v-model="params.talentName" class="" size="small" placeholder="人员姓名"
                           clearable>
                     <el-button slot="append" icon="el-icon-search" @click="search()" ></el-button>
                 </el-input>
@@ -19,7 +19,7 @@
         </div>
         <div class="tableCon">
             <el-table :data="tableData"  style="width: 100%">
-                <el-table-column prop="talentName" label="员工姓名"></el-table-column>
+                <el-table-column prop="talentName" label="人员姓名"></el-table-column>
                 <el-table-column prop="salary" label="排班收入(元)"></el-table-column>
                 <el-table-column prop="rewardAndPublish" label="奖惩(元)"></el-table-column>
                 <el-table-column prop="deduction" label="扣款(元)" show-overflow-tooltip></el-table-column>
@@ -31,7 +31,7 @@
                                 title=""
                                 width="200"
                                 trigger="hover"
-                                content="该员工待发明细合计金额（未包含已冻结金额）">
+                                content="该人员待发明细合计金额（未包含已冻结金额）">
                             <div slot="reference"><i class="el-icon-warning-outline cursor co-blue"></i></div>
                         </el-popover>
                     </template>
@@ -44,7 +44,7 @@
                                 title=""
                                 width="200"
                                 trigger="hover"
-                                content="该员工待发明细中已冻结的合计金额">
+                                content="该人员待发明细中已冻结的合计金额">
                             <div slot="reference"><i class="el-icon-warning-outline cursor co-blue"></i></div>
                         </el-popover>
                     </template>
@@ -141,7 +141,7 @@
                 })
             },
             change(text){
-                text = '该员工待发明细合计金额（未包含已冻结金额）';
+                text = '该人员待发明细合计金额（未包含已冻结金额）';
                 return this.$alert(text, '', {
                     confirmButtonText: '确定',
                     callback: action => {

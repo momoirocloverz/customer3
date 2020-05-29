@@ -1,10 +1,10 @@
 <template>
     <div class="normalDetCon" v-loading="loading">
         <div class="topPart" @keyup.enter="enterReaction">
-            <el-select v-model="errorStatus" placeholder="员工异常状态" size="small" @change="store1(errorStatus)">
+            <el-select v-model="errorStatus" placeholder="人员异常状态" size="small" @change="store1(errorStatus)">
                 <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
-           <el-input v-model="userName" size="small" placeholder="员工姓名" class="limitInput " clearable>
+           <el-input v-model="userName" size="small" placeholder="人员姓名" class="limitInput " clearable>
                <el-button slot="append" icon="el-icon-search" @click="store2(userName)"></el-button>
             </el-input>
         </div>
@@ -19,7 +19,7 @@
                 </div>
                 <el-table :data="tableData" style="width: 100%;margin-top:20px" empty-text="暂无相关信息" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="100"></el-table-column>
-                    <el-table-column label="员工姓名" >    
+                    <el-table-column label="人员姓名" >    
                         <template v-slot="scope">
                             <div class="flexHere">
                                 <span>{{ scope.row.talentName }}</span>   

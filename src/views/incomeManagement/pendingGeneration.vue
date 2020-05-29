@@ -40,16 +40,16 @@
                     </el-checkbox-group>
                 </div>
             </el-form-item>
-            <el-form-item label="选择员工">
+            <el-form-item label="选择人员">
                 <div>
-                    {{ isTalentAll ? '全部' : `已选择${form.talentIds.length}个员工`}}
+                    {{ isTalentAll ? '全部' : `已选择${form.talentIds.length}个人员`}}
                     <span class="co-blue cursor pl10" @click="openTalent()">重新选择</span>
                 </div>
             </el-form-item>
             <el-form-item label="其他设置">
                 <el-checkbox-group class="label-col" v-model="setType">
                     <el-checkbox label="1">包含非本订单项奖惩的惩罚金额</el-checkbox>
-                    <el-checkbox label="2">排除所选条件下合计待发金额≤0的员工</el-checkbox>
+                    <el-checkbox label="2">排除所选条件下合计待发金额≤0的人员</el-checkbox>
                 </el-checkbox-group>
                 <el-popover
                         placement="top-start"
@@ -57,7 +57,7 @@
                         width="200"
                         trigger="hover"
                         class="label-icon"
-                        content="选中后，如所选员工有所选条件以外的待发放惩罚金额，亦将加入该订单">
+                        content="选中后，如所选人员有所选条件以外的待发放惩罚金额，亦将加入该订单">
                     <div slot="reference"><i class="el-icon-warning-outline cursor co-blue"></i></div>
                 </el-popover>
             </el-form-item>
@@ -83,7 +83,7 @@
                 </el-button>
             </div>
         </el-dialog>
-        <el-dialog title="选择员工" :visible.sync="dialogTalentVisble" class="dialog-talent-visble" width="880px"
+        <el-dialog title="选择人员" :visible.sync="dialogTalentVisble" class="dialog-talent-visble" width="880px"
                    height="500px"
                    style="overflow-y: auto" :close-on-click-modal='true' :before-close="closeTalent">
             <div class="flex-box flex-align">
@@ -96,7 +96,7 @@
                     </el-select>
                 </div>
                 <div class="pb10" style="width: 240px">
-                    <el-input v-model="form.talentName" class="" size="small" placeholder="员工姓名"
+                    <el-input v-model="form.talentName" class="" size="small" placeholder="人员姓名"
                               clearable>
                         <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                     </el-input>
@@ -113,7 +113,7 @@
                         :reserve-selection="true"
                         width="55">
                 </el-table-column>
-                <el-table-column prop="talentName" label="员工姓名" align="center"></el-table-column>
+                <el-table-column prop="talentName" label="人员姓名" align="center"></el-table-column>
                 <el-table-column prop="attributeName" label="属性" align="center"></el-table-column>
                 <el-table-column prop="settlementTypeName" label="结算周期" align="center"></el-table-column>
                 <el-table-column prop="salary" align="center">
@@ -124,7 +124,7 @@
                                 title=""
                                 width="200"
                                 trigger="hover"
-                                content="该员工待发明细合计金额（未包含已冻结金额）">
+                                content="该人员待发明细合计金额（未包含已冻结金额）">
                             <div slot="reference"><i class="el-icon-warning-outline cursor co-blue"></i></div>
                         </el-popover>
                     </template>
@@ -137,7 +137,7 @@
                                 title=""
                                 width="200"
                                 trigger="hover"
-                                content="该员工待发明细中已冻结的合计金额">
+                                content="该人员待发明细中已冻结的合计金额">
                             <div slot="reference"><i class="el-icon-warning-outline cursor co-blue"></i></div>
                         </el-popover>
                     </template>

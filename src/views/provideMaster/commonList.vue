@@ -5,10 +5,10 @@
                 <el-select v-model="status" placeholder="订单状态" size="small" class="setSelectWidth mr20" @change="searchAction">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
-                <el-select v-model="payWay" placeholder="发放方式" size="small" class="setSelectWidth " @change="searchAction">
+                <el-select v-model="payWay" placeholder="发放方式" size="small" class="setSelectWidth mr20" @change="searchAction">
                     <el-option v-for="item in payWayOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
-                <el-date-picker v-model="daterange" type="daterange"  range-separator="至"  start-placeholder="创建时间" end-placeholder="创建时间" size="small" class="ml20 mr20" format="yyyy-MM-dd"  value-format="yyyy-MM-dd" @change="searchAction">
+                <el-date-picker v-model="daterange" type="daterange"  range-separator="至"  start-placeholder="创建时间" end-placeholder="创建时间" size="small" class="mr20 datePicker" format="yyyy-MM-dd"  value-format="yyyy-MM-dd" @change="searchAction">
                 </el-date-picker>
             </div>
            <el-input v-model="orderNumber" size="small" placeholder="订单号" class="limitInput" clearable ><el-button slot="append" icon="el-icon-search" @click="searchAction"></el-button></el-input>
@@ -268,9 +268,14 @@
     .provideMasterCon {
         .limitInput {
             width: 240px;
+            margin-top: 10px;
+        }
+        .datePicker {
+            margin-top: 10px;
         }
         .setSelectWidth {
             width: 160px;
+            margin-top: 10px;
         }
         .pagCon {
             display: flex;
@@ -281,8 +286,8 @@
         .topPart {
             display: flex;
             justify-content:space-between;
-            align-content: center;
-            align-items: center;
+            align-content:center;
+            align-items:flex-start;
         }
     }
 </style>

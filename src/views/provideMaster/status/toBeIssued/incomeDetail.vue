@@ -9,7 +9,7 @@
             <el-input v-model="taskName" size="small" placeholder="任务名称" class="limitInput mr20" clearable>
                 <el-button slot="append" icon="el-icon-search" @click="store4(taskName)"></el-button>
             </el-input>
-            <el-input v-model="userName" size="small" placeholder="员工姓名" class="limitInput" clearable>
+            <el-input v-model="userName" size="small" placeholder="人员姓名" class="limitInput" clearable>
                 <el-button slot="append" icon="el-icon-search" @click="store3(userName)"></el-button>
             </el-input>
         </div>
@@ -24,7 +24,7 @@
                 </div>
                 <el-table :data="tableData"  style="width: 100%;margin-top:20px" empty-text="暂无相关信息"  @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="100"></el-table-column>
-                    <el-table-column prop="talentName" label="员工姓名" ></el-table-column>
+                    <el-table-column prop="talentName" label="人员姓名" ></el-table-column>
                     <el-table-column label="收入明细类型" >
                         <template v-slot="scope">
                             <div>{{ typeMap[scope.row.type] || '-'}}</div>

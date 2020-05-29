@@ -11,7 +11,7 @@
                 </el-date-picker>
             </div>
             <div class="">
-                <el-input @keyup.enter.native="search()" v-model="params.talentName" class="" size="small" placeholder="员工姓名"
+                <el-input @keyup.enter.native="search()" v-model="params.talentName" class="" size="small" placeholder="人员姓名"
                           clearable>
                     <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                 </el-input>
@@ -33,7 +33,7 @@
                         <div>{{scope.row.month | dateFor}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="talentName" label="员工姓名"></el-table-column>
+                <el-table-column prop="talentName" label="人员姓名"></el-table-column>
                 <el-table-column prop="salary" label="排班收入(元)" :formatter="moenyMatter"></el-table-column>
                 <el-table-column prop="rewardAndPublish" label="奖惩(元)" :formatter="moenyMatter"></el-table-column>
                 <el-table-column prop="deduction" label="扣款(元)" :formatter="moenyMatter" show-overflow-tooltip></el-table-column>

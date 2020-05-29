@@ -2,7 +2,7 @@
     <div class="provideInnerDetailCon">
         <div v-if="detailInfo.title == '排班收入' ">
             <div class="localFlex">
-                <div>员工姓名</div>
+                <div>人员姓名</div>
                 <div>{{ detailInfo.obj.talentName }}</div>
             </div>
             <div class="localFlex">
@@ -48,7 +48,7 @@
         </div>
         <div v-if="detailInfo.title == '奖惩' ">
             <div class="localFlex">
-                <div>员工姓名</div>
+                <div>人员姓名</div>
                 <div>{{ detailInfo.obj.talentName }}</div>
             </div>
             <div class="localFlex">
@@ -84,7 +84,7 @@
         </div>
         <div v-if="detailInfo.title == '扣款' ">
              <div class="localFlex">
-                <div>员工姓名</div>
+                <div>人员姓名</div>
                 <div>{{ detailInfo.obj.talentName }}</div>
             </div>
             <div class="localFlex" v-if="detailInfo.obj.type == '系统使用费' ">
