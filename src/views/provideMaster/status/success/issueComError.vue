@@ -24,7 +24,7 @@
                     <el-table-column prop="salaryTotal" label="应发收入(元)" ></el-table-column>  
                     <el-table-column  label="失败原因" show-overflow-tooltip>
                         <template v-slot="scope">
-                            <span>{{ scope.row.errorMsg }}</span> 
+                            <span>{{ scope.row.errorMsg || '-' }}</span> 
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" >

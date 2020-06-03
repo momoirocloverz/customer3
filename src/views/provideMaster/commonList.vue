@@ -213,7 +213,7 @@
                 }
             },
             formatter5(row, column){
-                if( row.status == '7'|| row.status == '1'){
+                if( row.status == '7'|| row.status == '1'|| row.status == '2'|| row.status == '3'  ){
                     return '-'
                 }else{
                     return row.successPop

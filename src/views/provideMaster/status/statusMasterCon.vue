@@ -193,7 +193,9 @@
                                     <div class="unableText">线上发放</div>
                                     <div>通过薪企云服发放</div>
                                     <div>需收取<br/>
-                                        付款手续费：{{payTypeInfoArray[0].payMoney}}元/人，<span v-if="payTypeInfoArray[0].ifTalentPay">从人员收入中扣款</span><span v-else>不从人员收入中扣款</span><br/>
+                                        付款手续费：{{payTypeInfoArray[0].payMoney ? payTypeInfoArray[0].payMoney :'0.00'}}元/人，
+                                        <span v-if="payTypeInfoArray[0].ifTalentPay">从人员收入中扣款</span>
+                                        <br/>
                                         平台信息费：应发收入的{{payTypeInfoArray[0].cusRate}}%<br/>
                                         信息服务费：应发发收入{{payTypeInfoArray[0].rate}}%<br/>
                                         个税：超出30000元/月/人会产生个人所得税<br/>
@@ -251,12 +253,12 @@
                                             </div>
                                             <div>{{statusBridgeObj.managerFee}}元</div>
                                         </div>
-                                        <div class="mb10">
+                                        <!--<div class="mb10">
                                              平台信息费合计{{statusBridgeObj.cusServiceFee}}元
                                         </div>
                                         <div class="mb10">
                                              付款手续费合计{{statusBridgeObj.payMoney}}元 
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                                 <div class="resetMargin fakeMargin">
@@ -267,7 +269,7 @@
                                             </div>
                                             <div>{{statusBridgeObj.htAccountFee }}元</div>
                                         </div>
-                                        <div class="mb10">
+                                        <!--<div class="mb10">
                                               信息服务费合计{{statusBridgeObj.serviceFee}}元
                                         </div>
                                         <div class="mb10">
@@ -275,7 +277,7 @@
                                         </div>
                                         <div class="mb10">  
                                             实发收入合计{{statusBridgeObj.salaryTotal}}元
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                             </div>
@@ -543,6 +545,8 @@
             },
             checkWipDetail(){
                 this.wipVisible = false;
+                this.analyseQuery();
+                this.getMasterInfo(); 
             },
             checkAllWip(){
                 this.wipVisible = false;
@@ -668,7 +672,7 @@
                 this.resetVisible = false;
             },
             submitResetForm(formName){
-                 this.disabled3 = true;
+                 
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let data = {
@@ -677,6 +681,7 @@
                             password:this.resetForm.pass,
                             confirmPassword:this.resetForm.repeatPass,
                         };
+                        this.disabled3 = true;
                         this.ApiLists.setPasswordCus(data).then(res => {
                             let { respCode } = res;
                             if( respCode == 0 ){
@@ -889,8 +894,8 @@
                                 })
                                  window.timerHead = setInterval(()=>{
                                      current = current+1000;
-                                     this.countDownText = this.Dayjs(  30*60*1000+formatDate -current   ).format('mm:ss');
-                                    if( (30*60*1000+formatDate -current  == 0)||( 30*60*1000+formatDate -current  < 0 ) ){
+                                     this.countDownText = this.Dayjs(  60*60*1000+formatDate -current   ).format('mm:ss');
+                                    if( (60*60*1000+formatDate -current  == 0)||( 60*60*1000+formatDate -current  < 0 ) ){
                                         clearInterval( window.timerHead );
                                         this.countDownText = '00:00';
                                         let data = {
@@ -1017,7 +1022,7 @@
     .statusMasterCon {
         .boomBlock {
             height: 120px;
-            overflow-y: scroll;
+            overflow: hidden;
         }
         .flexSub {
             display: flex;

@@ -2,29 +2,29 @@
     <div class="wipMasterCon" v-loading="loading">
         <div class="bottomPart">
             <div  class="topPart" @keyup.enter="searchAction">
-                <el-select v-model="status" placeholder="发放状态" size="small" @change="statusChange">
+                <!--<el-select v-model="status" placeholder="发放状态" size="small" @change="statusChange">
                 <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
+              </el-select>-->
                 <el-input v-model="userName" size="small" placeholder="人员姓名" class="limitInput" clearable><el-button slot="append" icon="el-icon-search" @click="searchAction"></el-button></el-input>
             </div>
             <div class="tableCon">
                 <div class="sumInfoCon">
-                    <div class="sumTextCon">
+                    <!--<div class="sumTextCon">
                         合计：{{totalPop}}人；排班收入{{salary}}元；奖惩{{rewardAndPublish}}元；扣款{{deduction}}元；合计收入{{salaryTotal}}元
-                    </div>
+                    </div>-->
                 </div>
                 <el-table :data="tableData"  style="width: 100%;margin-top:20px" empty-text="暂无相关信息">
                     <el-table-column prop="talentName" label="人员姓名" ></el-table-column>
                     <el-table-column prop="salary" label="排班收入(元)" ></el-table-column>
                     <el-table-column prop="rewardAndPublish" label="奖惩(元)" ></el-table-column>
                     <el-table-column prop="deduction" label="扣款(元)" ></el-table-column>
-                    <el-table-column prop="salaryTotal">
-                        <template slot="header" slot-scope="scope">
+                    <el-table-column prop="salaryTotal"  label="应发收入(元)" >
+                        <!--<template slot="header" slot-scope="scope">
                                 <span>应发收入(元)</span>   
                                     <el-popover  placement="top" title="" trigger="hover"  :content="sixthDescribe" popper-class="cusPopper" width="250">
                                         <i class="el-icon-warning-outline" slot="reference" ></i>
                                   </el-popover>
-                            </template>
+                            </template>-->
                             <template v-slot="scope">
                                 <div>{{ scope.row.salaryTotal }}</div>
                             </template>
@@ -181,8 +181,8 @@
                     pageSize:this.pageSize,
                     talentName:this.userName,
                     id:this.id,
-                    status: this.statusChangeFlag&&this.status != 0 ? this.status :this.$parent.orderStatus,
-                    subStatus: this.statusChangeFlag&&this.status != 0 ? this.status :this.$parent.orderStatus,
+                    status:this.$parent.orderStatus,
+                    subStatus: this.$parent.orderStatus,
                 };
                 this.requestLists( data );
             },
@@ -193,8 +193,8 @@
                     pageSize:this.pageSize,
                     talentName:this.userName,
                     id:this.id,
-                    status: this.statusChangeFlag&&this.status != 0 ? this.status :this.$parent.orderStatus,
-                    subStatus: this.statusChangeFlag&&this.status != 0 ? this.status :this.$parent.orderStatus,
+                    status: this.$parent.orderStatus,
+                    subStatus: this.$parent.orderStatus,
                 };
                 this.requestLists( data );
             },
@@ -210,13 +210,13 @@
                             this.total = 0;
                             this.tableData = [];
                         }
-                        if( data&&data.salaryOrderTotalVO ){
+                      /*  if( data&&data.salaryOrderTotalVO ){
                             this.totalPop = data.salaryOrderTotalVO.totalPop || 0;
                             this.salary =data.salaryOrderTotalVO.salary || 0;
                             this.rewardAndPublish =data.salaryOrderTotalVO.rewardAndPublish || 0;
                             this.deduction =data.salaryOrderTotalVO.deduction || 0;
                             this.salaryTotal =data.salaryOrderTotalVO.salaryTotal || 0;
-                        }
+                        }*/
                     }
                 }).catch(err=>{
                     console.log('err',err);
@@ -230,7 +230,6 @@
                 const {href} = this.$router.resolve({
                     name: 'commonInnerDetail',
                     query:{
-                        showExport:false,
                         talentId:row.talentId,
                         orderNo:this.$parent.orderNo,
                         talentName:row.talentName,

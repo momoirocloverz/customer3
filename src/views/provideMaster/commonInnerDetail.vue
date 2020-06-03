@@ -180,7 +180,8 @@
                 let params = {
                     orderId:this.id,
                     orderNo:this.orderNo,
-                    talentName:this.name,
+                    talentName:this.name,     
+                    talentId:this.talentId,
                     status:this.orderStatus,
                 };
                 if( this.payWay ){
