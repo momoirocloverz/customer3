@@ -92,7 +92,11 @@
                               </el-popover>
                         </template>
                     </el-table-column>  --> 
-
+                    <el-table-column label="发放状态" >
+                        <template v-slot="scope">
+                            <span>{{ statusMap[scope.row.status] }}</span>  
+                        </template>
+                    </el-table-column>    
                     <el-table-column label="操作" >
                         <template v-slot="scope">
                             <el-button type="text" size="small" @click="checkDetail(scope.row)">查看明细</el-button>
@@ -182,7 +186,7 @@
                     talentName:this.userName,
                     id:this.id,
                     status:this.$parent.orderStatus,
-                    subStatus: this.$parent.orderStatus,
+//                    subStatus: this.$parent.orderStatus,
                 };
                 this.requestLists( data );
             },
@@ -194,7 +198,7 @@
                     talentName:this.userName,
                     id:this.id,
                     status: this.$parent.orderStatus,
-                    subStatus: this.$parent.orderStatus,
+//                    subStatus: this.$parent.orderStatus,
                 };
                 this.requestLists( data );
             },

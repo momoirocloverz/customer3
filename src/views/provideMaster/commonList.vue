@@ -33,7 +33,7 @@
                     <el-table-column label="发放人数" show-overflow-tooltip width="180">
                         <template v-slot="scope">
                             <div>
-                                {{ scope.row.status == '5' ? '0' :  scope.row.totalPop}}
+                                {{scope.row.totalPop}}
                             </div>
                         </template>
                     </el-table-column>

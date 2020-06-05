@@ -133,7 +133,7 @@
                 data.pageSize = this.pageSize;
                 data.id = this.id;
 //                data.status = this.$parent.$parent.orderStatus
-                data.status = 6;
+                data.status = 5;
                 data.subStatus = 6;                
                 this.requestLists( data );
             },

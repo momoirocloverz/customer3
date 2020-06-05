@@ -7,7 +7,7 @@
             <div class="tableCon">
                 <div class="sumInfoCon">
                     <div class="sumTextCon">
-                        合计：{{totalPop}}人；排班收入{{salary}}元；奖惩{{rewardAndPublish}}元；扣款{{deduction}}元；合计收入{{salaryTotal}}元
+                        合计：{{totalPop}}人；排班收入{{salary}}元；奖惩{{rewardAndPublish}}元；扣款{{deduction}}元
                     </div>
                     <div>
                         <el-button type="primary" size="small" @click="exportExcel">导出明细</el-button>
