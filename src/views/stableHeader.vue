@@ -39,7 +39,7 @@
                 <div class="accountInfo">请向以下网商银行账户转账：<br/>
                     银行：网商银行<br/>
                     户名：开封市薪企云服人力资源服务有限公司<br/>
-                    账号：5855700282900000034</div>
+                    账号：{{netAccount}}</div>
             </div>
             <div class="flexHere">
                 <el-button type="info" size="small" class="sameWidthBtn"  @click="cloudVisible = false">关 闭</el-button>
@@ -54,6 +54,7 @@
         name: 'commonHeader',
         data() {
             return {
+                netAccount:'5855700282900000034',
                 cloudVisible:false,
                 currentAccount:'',
                 haveAccount:false,
@@ -75,6 +76,7 @@
                     let { respCode,data } = res;
                     if( respCode == 0 ){
                         if( data ){
+                            this.netAccount = '58557002829'+data.subAccountNo;
                             this.haveAccount = true;
                             this.balance = data.balance;
                         }else{

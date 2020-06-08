@@ -160,6 +160,12 @@
                     status:5,
                     payWay:this.$parent.$parent.payType
                 };
+                const loading = this.$loading({
+                    lock: true,
+                    text: '正在导出excel表...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(255, 255, 255, 0.9)'
+                });
                 this.ApiLists.orderExport(params).then(res=>{
                     let { data,respCode } = res;
                     if( respCode == 0 ){
@@ -167,6 +173,8 @@
                     }
                 }).catch(err=>{
                     console.log('err',err);
+                }).finally(()=>{
+                    loading.close();
                 })
             },
             setCurrentPageAction(){
