@@ -3,16 +3,12 @@
         <div class="topPart"  @keyup.enter="searchAction">
             <div class="flexCon">                
                 <el-input v-model="userName" size="small" placeholder="人员姓名" class="limitInput" clearable><el-button slot="append" icon="el-icon-search" @click="searchAction"></el-button></el-input>
-            </div>
-            <div>
-                <div class="sumInfoCon">
-                    <div class="sumTextCon">合计：{{totalPop}}人；排班收入{{salary}}元；奖惩{{rewardAndPublish}}元；扣款{{deduction}}元；合计收入{{salaryTotal}}元
-                    </div>
-                    <div>
+                
+                <div>
                         <el-button type="primary" size="small" @click="exportAction">导出明细</el-button>
                     </div>
-                </div>
-            </div>
+                
+            </div>         
         </div>
         <div class="bottomPart">
             <div class="tableCon">

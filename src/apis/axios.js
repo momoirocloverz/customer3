@@ -18,7 +18,7 @@ if (process.env.NODE_ENV == 'production'){
 const instance = axios.create({
     baseURL: baseURL,
     withCredentials: true,
-    timeout: 100000,
+//    timeout: 100000,
     headers: {
         'Content-Type': 'application/json',
         'os':'web',
