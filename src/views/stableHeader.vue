@@ -8,22 +8,19 @@
                 </div>
                 <div class="rightTopPart f14">
                     <div class="breadCon"></div>
-                    <div>
-                        <span v-if="haveAccount" class="setMargin">
-                            <el-dropdown @command="handleCommand">
-                                <span class="el-dropdown-link co-999"> 
-                                    {{ currentAccount }} 
-                                </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="a">查看薪企云服账户</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </span>                        
-                      <span v-else class="el-dropdown-link cursorSet co-999 setMargin">
-                        {{currentAccount}}
-                      </span>
-                      <span class="co-blue cursorSet" @click="logOut">退出登录</span>
-                    </div>
+                    <el-dropdown class="loginDropdown" trigger="hover" @command="handleCommand">
+                        <span class="el-dropdown-link loginName">
+                            <img :src="logoSrc">
+                            <span>{{ name }} </span>
+                            <i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="a">账号管理</el-dropdown-item>
+                            <el-dropdown-item v-if="existMultipleRoles" command="b">切换角色</el-dropdown-item>
+                            <el-dropdown-item command="c">帮助中心</el-dropdown-item>
+                            <el-dropdown-item command="d">退出</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                 </div>
             </div>
             <div class="bottomCon">
@@ -54,6 +51,9 @@
         name: 'commonHeader',
         data() {
             return {
+                logoSrc:require('@/assets/logo.png'),
+                name:'',
+                existMultipleRoles:false,
                 netAccount:'5855700282900000034',
                 cloudVisible:false,
                 currentAccount:'',
@@ -67,10 +67,42 @@
             ])
         },
         mounted() {
-            this.currentAccount = this.getWebInfo.customerInfo ? this.getWebInfo.customerInfo.name : '';
-            this.checkOnlineInfo();
+            this.initAction();
+//            this.checkOnlineInfo();
         },
         methods: {
+            initAction() {
+                if( this.getWebInfo.customerInfo.type ){
+                    this.logoSrc = this.getWebInfo.avatar ;
+                    switch( this.getWebInfo.customerInfo.type ){
+                        case 1:
+                            this.name = this.getWebInfo.customerInfo.realName;
+                            break;
+                        case 2:
+                            this.name = this.getWebInfo.customerInfo.shortName
+                            break;    
+                    }
+                }
+                let params1 = {
+                    calLatest:true,
+                };
+                this.ApiLists.fetchMobileAccount(params1).then(res=>{
+                    let { respCode,data } = res;
+                    if( respCode == 0 ){
+                        if( data ){
+                            if( data.length > 1 ){
+                                this.existMultipleRoles =  true;
+                            }else{
+                                this.existMultipleRoles =  false;
+                            }
+                        }else{
+                            this.existMultipleRoles =  false;
+                        }
+                    }   
+                }).catch(err=>{
+                    console.log('err',err);
+                })
+            },
             checkOnlineInfo(){
                 this.ApiLists.hantangAccount().then(res => {
                     let { respCode,data } = res;
@@ -93,10 +125,30 @@
                 this.$router.push('/');
             },
             handleCommand(command) {
-                switch (command) {
+                switch (command){
                     case 'a':
-                        this.cloudVisible = true;
-                    break;
+                        this.$router.push({
+                            path: '/main/account',
+                        }).catch(err=>{
+                            console.log('err',err);
+                        });
+                        this.$store.commit('changeMenuActiveIndex', 'none');
+                        this.$store.commit('changeAccountActiveIndex', '1');
+                        break;
+                    case 'b':
+
+                        break;
+                    case 'c':
+                        this.$router.push({
+                            path: '/main/help',
+                        }).catch(err=>{
+                            console.log('err',err);
+                        });
+                        this.$store.commit('changeMenuActiveIndex', 'none');
+                        break;
+                    case 'd':
+                        this.logOut();
+                        break;
                 }
             },
         }
@@ -105,6 +157,25 @@
 <style lang="scss" scoped>
     .rootCopyContainer {
         width: 100%;
+        .loginDropdown {
+        margin-left: 80px;
+        .loginName {
+          height: 100%;
+          display: flex;
+            cursor: pointer;
+          align-items: center;
+          img {
+            width: 40px;
+            height: 40px;
+              border-radius: 20px;
+            margin-right: 16px;
+          }
+          span {
+            height: 40px;
+            line-height: 40px;
+          }
+        }
+      }
         .setMargin {
             margin-right: 5px;
             cursor: pointer;
@@ -136,7 +207,7 @@
                 align-content: center;
                 .titleText {
                     display: flex;
-                    margin: 0 40px;
+                    // margin: 0 40px;
                     height:80px;
                     justify-content: center;
                     align-items: center;

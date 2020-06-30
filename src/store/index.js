@@ -8,12 +8,16 @@ const vuexLocal = new VuexPersistence({
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
-        menuActiveIndex:'0',
+        menuActiveIndex:'1',
         webInfo:{},
-        pathSize:[],//存储分页设置
-        breadcrumbList:[  { title:'首页' } ],
+        pathSize:[],
+        accountActiveIndex:'1',
+        tabNumber:'0'
     },
     getters: {
+        getAccountActiveIndex: state => {
+            return state.accountActiveIndex
+        },
         getMenuActiveIndex: state => {
             return state.menuActiveIndex
         },
@@ -26,16 +30,15 @@ export default new Vuex.Store({
         getWebInfo:state => {
             return state.webInfo
         },
-        getBreadcrumbList:state=>{
-            return state.breadcrumbList
-        }
     },
     mutations: {
         //重置初始化属性，都在这里添加，然后调用
         reInitVuexData(state){
-            state.menuActiveIndex = '0';
+            state.menuActiveIndex = '1';
             state.webInfo = {};
-            state.breadcrumbList = [ { title:'首页' } ];
+        },
+        changeAccountActiveIndex(state,payload){
+            state.accountActiveIndex = payload;
         },
         changeMenuActiveIndex(state,payload){
             state.menuActiveIndex = payload;
@@ -57,11 +60,11 @@ export default new Vuex.Store({
                 }
             }
         },
+        setTabnumber(state,payload){
+          state.tabNumber = payload
+        },
         setWebInfo(state,payload){
             state.webInfo = payload;
-        },
-        setBreadcrumbList(state,payload){
-            state.breadcrumbList = payload;
         },
     },
     actions: {

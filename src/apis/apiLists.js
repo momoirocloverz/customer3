@@ -1,4 +1,5 @@
 import instance from './axios';
+import axios from 'axios';
 import qs from 'qs';
 const _apiLists = {
     //密码登录
@@ -6,6 +7,283 @@ const _apiLists = {
         return instance({
             method: 'get',
             url: '/user-center/login/pwd',
+            params
+        })
+    },
+    multiLogin:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/login/multiLogin',
+            params
+        })
+    },    
+    fetchMobileAccount:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/login/mobileAccount',
+            params
+        })
+    },   
+    loginNintendoSwitch:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/login/switch',
+            params
+        })
+    },   
+    personalCustomerConfirm:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/customer/personalCustomerConfirm',
+            params
+        })
+    },   
+    enterpriseCustomerCheck:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/user-center/customer/enterpriseCustomerCheck',
+            data,
+        })
+    },
+    enterpriseCustomerConfirm:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/user-center/customer/enterpriseCustomerConfirm',
+            data,
+        })
+    },  
+    talentUpdateAttr:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/user-center/talent/updateAttr',
+            data,
+        })
+    },  
+    helpRangeList:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/orgrimar/help/range/list',
+            params
+        })
+    },
+    helpQuestionList:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/orgrimar/help/question/list',
+            data,
+        })
+    },  
+    helpQuestionDetail:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/orgrimar/help/question/detail',
+            params
+        })
+    },
+    userSetPassWord:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/user/setPassWord',
+            params
+        })
+    },
+    verifyCode:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/orgrimar/sms/verifyCode',
+            params
+        })
+    },
+    changeMobile:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/customer/changeMobile',
+            params
+        })
+    },
+    setLogoAndBg:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/customer/setLogoAndBg',
+            params
+        })
+    },
+    businessCustomerDetail:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/customer/detail',
+            params
+        })
+    }, 
+    uploadQiniu:(data)=>{
+        return axios({
+            method: 'post',
+            url: 'http://upload.qiniu.com/',
+            data
+        })
+    },
+    switchEmpStatus:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/user-center/talent/switchEmpStatus',
+            data,
+        })
+    },  
+    talentMailList:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/talent/mailList',
+            params
+        })
+    }, 
+    talentQueryMailList:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/talent/mailList/talents',
+            params
+        })
+    }, 
+    waitReceiveEmpNum:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/talent/waitReceiveEmpNum',
+            params
+        })
+    }, 
+    waitReceiveEmp:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/talent/waitReceiveEmp',
+            params
+        })
+    }, 
+    fetchContactsTalents:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/talent/talents',
+            params
+        })
+    }, 
+    fetchTalentSkills:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/talent/skills',
+            params
+        })
+    }, 
+    talentsCus:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/talent/talents/cus',
+            params
+        })
+    },     
+    talentSmallCus:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/talent/talents/smallCus',
+            params
+        })
+    },   
+    getBindingCode:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/partner/getBindingCode',
+            params
+        })
+    },  
+    rewardAndPunishDetails:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/trade/rewardAndPunish/detail',
+            params
+        })
+    },  
+    rewardAndPunishLists:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/trade/rewardAndPunish/list',
+            params
+        })
+    },  
+    
+    
+    
+    
+    orgrimarAttributeList:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/orgrimar/attribute/list',
+            params
+        })
+    }, 
+    talentUnbind:(params)=>{
+        return instance({
+            method: 'delete',
+            url: '/user-center/talent/unbind',
+            params
+        })
+    }, 
+    getPartnerList:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/partner/getPartnerList',
+            params
+        })
+    }, 
+    getTalentDetails:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/talent/details',
+            params
+        })
+    }, 
+    removePartner:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/partner/removePartner',
+            params
+        })
+    }, 
+    
+    
+    
+    
+    
+    
+    
+    
+    waterMark:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/orgrimar/sysparam/n/value',
+            params
+        })
+    }, 
+    getDicList:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/orgrimar/dictionary/getSonNodeByCodeAndValue',
+            params,
+        })
+    },
+    getSonNodeByParentId:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/orgrimar/dictionary/getSonNodeByParentId',
+            params,
+        })
+    },
+    cowToken:()=>{
+        return instance({
+            method: 'get',
+            url: '/orgrimar/qiniu/token',
+        })
+    },
+    cowSpToken:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/orgrimar/qiniu/token2',
             params
         })
     },
@@ -271,6 +549,71 @@ const _apiLists = {
             params,
         })
     },
+    // 首页任务列表
+    taskList:(params)=>{
+      return instance({
+        method: 'get' ,
+        url: '/biz-center/task/list',
+        params
+      })
+    },
+    // 结束任务
+    endtask:(params)=>{
+      return instance({
+        method: 'get' ,
+        url: '/biz-center/task/finishOneTask',
+        params
+      })
+    },
+    // 首页任务列表
+    taskSetting:(params)=>{
+      return instance({
+        method: 'get' ,
+        url: '/biz-center/task/setting',
+        params
+      })
+    },
+    // 任务详情
+    getTaskdetails:(params) => {
+      return instance({
+        method: 'get',
+        url: '/biz-center/task/detail',
+        params
+      })
+    },
+    // 创建任务
+      // 获取合作伙伴
+      getPartnerList:(params)=>{
+        return instance({
+          method: 'get' ,
+          url: '/user-center/partner/getPartnerList',
+          params
+        })
+      },
+      //标签列表
+      customerIndustry: (params) => {
+        return instance({
+            method: 'get',
+            url: '/orgrimar/customer/industry/customerIndustry',
+            params,
+        })
+      },
+      // 计量单位
+      getByCodeAndLevel: (params) => {
+        return instance({
+            method: 'get',
+            url: 'orgrimar/dictionary/getByCodeAndLevel',
+            params,
+        })
+        // ?code=pieceUnit&level=1
+      },
+      getschedulinglist: (data)=>{
+        return instance({
+          method:'post',
+          url:'/biz-center/scheduling/b/list',
+          data,
+        })
+      }
 };
 export default {
     install: function(Vue) {

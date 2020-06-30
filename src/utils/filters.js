@@ -114,3 +114,12 @@ export function stableDatefilter2(val) {
         return '-'
     }
 }
+export function stableDatefilter3(val) {
+    if (val) {
+        return dayjs(val).format('YYYY/MM/DD HH:mm');
+    } else {
+        return '-'
+    }
+}
+
+

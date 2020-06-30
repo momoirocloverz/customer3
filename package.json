@@ -13,8 +13,11 @@
     "dayjs": "^1.8.22",
     "element-ui": "^2.13.0",
     "es6-promise": "^4.2.8",
+    "qrcode": "^1.4.4",
     "qs": "^6.9.1",
     "vue": "^2.6.11",
+    "vue-baidu-map": "^0.21.22",
+    "vue-cropperjs": "^4.1.0",
     "vue-router": "^3.1.5",
     "vuex": "^3.1.2",
     "vuex-persist": "^2.2.0"
@@ -26,6 +29,11 @@
     "compression-webpack-plugin": "^3.1.0",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "babel-eslint": "8.0.3",
+    "eslint": "^4.18.2",
+    "eslint-friendly-formatter": "3.0.0",
+    "eslint-loader": "1.9.0",
+    "eslint-plugin-html": "4.0.1"
   }
 }

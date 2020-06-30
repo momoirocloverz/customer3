@@ -40,10 +40,7 @@
 //            console.log(tab, event);
             },
             go() {
-                this.$store.commit('setBreadcrumbList',[
-                    { title:"人员收入明细" },
-                    { title:"生成待发放订单" },
-                ]);
+                
                 this.$router.push({
                     name:'pendingGeneration',
                     query:{

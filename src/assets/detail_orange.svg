@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>detail_orange</title>
+    <desc>Created with Sketch.</desc>
+    <g id="登录实名认证" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="选择角色认证hover" transform="translate(-900.000000, -429.000000)">
+            <g id="Group-2" transform="translate(320.000000, 187.000000)">
+                <g id="person_tag" transform="translate(20.000000, 200.000000)">
+                    <g id="detail_orange" transform="translate(560.000000, 42.000000)">
+                        <circle id="Oval" fill="#E6A23C" cx="10" cy="10" r="10"></circle>
+                        <path d="M13.3708739,9.07650484 C13.8763754,9.58653714 13.8763754,10.4134629 13.3708739,10.9234952 L9.70970869,14.6174758 C9.20420726,15.1275081 8.38462751,15.1275081 7.87912607,14.6174758 C7.37362464,14.1074435 7.37362464,13.2805178 7.87912607,12.7704855 L10.625,10 L7.87912607,7.22951453 C7.37362464,6.71948224 7.37362464,5.89255651 7.87912607,5.38252422 C8.38462751,4.87249193 9.20420726,4.87249193 9.70970869,5.38252422 L13.3708739,9.07650484 Z" id="Path" fill="#FFFFFF"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -126,6 +126,8 @@ export default {
         }
     },
     mounted(){
+      console.log( this.detailInfo)
+     
     },
     methods:{
         

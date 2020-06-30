@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>role_person</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="-2.48949813e-15%" id="linearGradient-1">
+            <stop stop-color="#FF882A" offset="0%"></stop>
+            <stop stop-color="#FF882A" stop-opacity="0.6" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="登录实名认证" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="选择角色认证" transform="translate(-370.000000, -419.000000)">
+            <g id="Group-2" transform="translate(320.000000, 187.000000)">
+                <g id="person_tag" transform="translate(20.000000, 200.000000)">
+                    <g id="role_person" transform="translate(30.000000, 32.000000)">
+                        <rect id="ic-cell" opacity="0.200000003" x="0" y="0" width="40" height="40"></rect>
+                        <path d="M28,28 C34.5254567,28 39.8343928,33.2085444 39.9962001,39.6950252 L40,40 L0,40 C-8.11624501e-16,33.372583 5.372583,28 12,28 L28,28 Z M32,0 L32,12 C32,18.627417 26.627417,24 20,24 C13.372583,24 8,18.627417 8,12 C8,5.372583 13.372583,1.21743675e-15 20,0 L32,0 Z" id="Combined-Shape" fill="url(#linearGradient-1)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
