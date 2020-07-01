@@ -6,12 +6,12 @@
           <img class="headerImg" src="img/welcome2.1f2b266a.png" alt="" />
         </div>
         <ul class="boxList">
-          <li class="silderBtn" @click="goAddtask()">
+          <li class="silderBtn" @click="goTotask()">
             <img src="../assets/logo.png" alt="" />
             <span>发布任务</span>
             <i class="el-icon-arrow-right"></i>
           </li>
-          <li class="silderBtn">
+          <li class="silderBtn" @click="goToscheduling()">
             <img src="../assets/logo.png" alt="" />
             <span>排班</span>
             <i class="el-icon-arrow-right"></i>
@@ -286,9 +286,18 @@ export default {
       this.workType = key
     },
     // 跳转新建任务
-    goAddtask(){
+    goTotask(){
        this.$router.push({
         path: '/main/taskCreated',
+        query:{
+          id:'',
+        },
+      });
+    },
+    // 跳转新建任务
+    goToscheduling(){
+       this.$router.push({
+        path: '/main/schedulingIndex',
         query:{
           id:'',
         },

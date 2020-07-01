@@ -55,6 +55,7 @@
     .class-list {
         background-color: #fff;
         box-sizing: border-box;
+        padding: 40px;
         .tab-width{
             width: 180px;
         }

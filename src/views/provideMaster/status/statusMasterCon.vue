@@ -24,7 +24,7 @@
                                 <div>无需账户支出</div>
                             </div>
                         </div>
-                        <div class="flexStart greyText fourteenFont mt10" v-show="payType == 2">
+                        <div class="flexStart greyText fourteenFont mt10" v-show="payType == 2 || payType == 3 ">
                             <div class="flexStart mr20" >
                                 <div>管理费账户支付：</div>
                                 <div>{{status2SpObj.managerFee }}元</div>
@@ -38,9 +38,9 @@
                                 <div>{{status2SpObj.payMoney}}元</div>
                             </div>
                         </div>
-                        <div class="flexStart greyText fourteenFont mt10" v-show="payType == 2">
+                        <div class="flexStart greyText fourteenFont mt10" v-show="payType == 2 || payType == 3 ">
                             <div class="flexStart mr20" >
-                                <div>薪企云服账户支付：</div>
+                                <div><span v-if="payType == 2">薪企云服</span><span v-if="payType == 3">万才科技</span>账户支付：</div>
                                 <div>{{status2SpObj.htAccountFee }}元</div>
                             </div>
                             <div class="flexStart mr20">
@@ -99,7 +99,7 @@
                                 <div>无账户支出</div>
                             </div>
                         </div>
-                        <div class="flexStart greyText fourteenFont mt10" v-show="payType == 2">
+                        <div class="flexStart greyText fourteenFont mt10" v-show="payType == 2 || payType == 3">
                             <div class="flexStart mr20" >
                                 <div>管理费账户支付：</div>
                                 <div>{{status5SpObj.managerFee }}元</div>
@@ -113,10 +113,9 @@
                                 <div>{{status5SpObj.payMoney}}元</div>
                             </div>
                         </div>
-                        <div class="flexStart greyText fourteenFont mt10" v-show="payType == 2">
-                            
+                        <div class="flexStart greyText fourteenFont mt10" v-show="payType == 2 || payType == 3">
                             <div class="flexStart mr20" >
-                                <div>薪企云服账户支付：</div>
+                                <div><span v-if="payType == 2">薪企云服</span><span v-if="payType == 3">万才科技</span>账户支付：</div>
                                 <div>{{status5SpObj.htAccountFee }}元</div>
                             </div>
                             <div class="flexStart mr20">
@@ -184,14 +183,13 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="thirtyMargin" v-if="payTypeInfoArray.length">
-                            <div class="inputOuter notActive" :class="{activePaytype:selectNow == 2}" @click="selectNow = 2">
-                                <img class="setImg" v-if="selectNow == 2" :src="pic2SrcIs">
+                            <div class="inputOuter notActive" :class="{activePaytype:selectNow == 3}" @click="selectNow = 3">
+                                <img class="setImg" v-if="selectNow == 3" :src="pic2SrcIs">
                                 <img class="setImg" v-else :src="pic2Src">
                                 <div class="ml20">
                                     <div class="unableText">线上发放</div>
-                                    <div>通过薪企云服发放</div>
+                                    <div>通过万才科技发放</div>
                                     <div>需收取<br/>
                                         付款手续费：{{payTypeInfoArray[0].payMoney ? payTypeInfoArray[0].payMoney :'0.00'}}元/人，
                                         <span v-if="payTypeInfoArray[0].ifTalentPay">从人员收入中扣款</span>
@@ -212,8 +210,6 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        
                     </div>
                     <div class="flexHere">
                         <el-button type="info" size="small" class="sameWidthBtn"  @click="cancelForm('issueForm')">取 消</el-button>
@@ -222,7 +218,7 @@
                 </el-form>
             </div>
         </el-dialog>
-        <el-dialog title="确认支付" class="setRoot2Scoped setMiddleDialog"  :visible.sync="provideVisible" :class="{payActionResetHeight:payType == 2}" width="480px" :close-on-click-modal="false" border>
+        <el-dialog title="确认支付" class="setRoot2Scoped setMiddleDialog"  :visible.sync="provideVisible" :class="{payActionResetHeight:payType == 3}" width="480px" :close-on-click-modal="false" border>
             <div>
                 <el-form :model="provideForm" label-position="left" ref="provideForm" label-width="120px" class="demo-ruleForm" :rules="provideRules" key="4">
                     <div>
@@ -253,41 +249,26 @@
                                             </div>
                                             <div>{{statusBridgeObj.managerFee}}元</div>
                                         </div>
-                                        <!--<div class="mb10">
-                                             平台信息费合计{{statusBridgeObj.cusServiceFee}}元
-                                        </div>
-                                        <div class="mb10">
-                                             付款手续费合计{{statusBridgeObj.payMoney}}元 
-                                        </div>-->
                                     </div>
                                 </div>
                                 <div class="resetMargin fakeMargin">
                                     <div class="">
                                         <div class="flexSub mb10">
                                             <div>
-                                                薪企云服账户支付
+                                                万才科技账户支付
                                             </div>
                                             <div>{{statusBridgeObj.htAccountFee }}元</div>
                                         </div>
-                                        <!--<div class="mb10">
-                                              信息服务费合计{{statusBridgeObj.serviceFee}}元
-                                        </div>
-                                        <div class="mb10">
-                                              个人所得税合计{{statusBridgeObj.tax}}元 
-                                        </div>
-                                        <div class="mb10">  
-                                            实发收入合计{{statusBridgeObj.salaryTotal}}元
-                                        </div>-->
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <div class="flexInner" v-if="payType == 2">
-                                <div>薪企云服账户余额</div>
+                            <div class="flexInner" v-if="payType == 3">
+                                <div>万才科技账户余额</div>
                                 <div>{{balanceBridge}}元</div>
                             </div>
-                            <div class="flexInner" v-if="payType == 2">
+                            <div class="flexInner" v-if="payType == 3">
                                 <div>管理费账户可用余额</div>
                                 <div>{{anotherBalanceBridge}}元</div>
                             </div>
@@ -405,6 +386,7 @@
                 payTypeMap:{
                     1:'线下发放',
                     2:'线上发放-薪企云服',
+                    3:'线上发放-万才科技',
                 },
                 payType:1,
                 selectNow:1,
@@ -771,7 +753,7 @@
                         if(this.payType == 1){
                             this.payOfflineAction(data);
                         }
-                        if(this.payType == 2){
+                        if(this.payType == 3){
                             this.payOnlineAction(data);
                         }
                         console.log('submit!');
@@ -832,7 +814,7 @@
                 if(this.selectNow == 1){
                     this.generateOfflineOrder();
                 }
-                if(this.selectNow == 2){
+                if(this.selectNow == 3){
                     this.generateOnlineOrder();
                 }
             },

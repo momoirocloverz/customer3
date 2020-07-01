@@ -64,7 +64,7 @@
                 </div>
                 <div class="flex-box detail-item" v-show="detailInfo.type && detailInfo.title.includes('扣款')">
                     <span>扣款类型</span>
-                    <span class="">{{ detailInfo.type }}</span>
+                    <span class=""><label v-if="detailInfo.type == '系统使用费' ">{{ detailInfo.feeDate | cutter }}</label>{{ detailInfo.type }}</span>
                 </div>
                 <div class="flex-box detail-item" v-show="detailInfo.salaryTotal && detailInfo.title.includes('扣款')">
                     <span>扣款金额</span>
@@ -96,6 +96,12 @@ export default {
         }
     },
     filters:{
+        cutter(val){
+            if( val ){
+                let arr = val.split('-');
+                return arr[1]+arr[2];
+            }
+        },
         typeFor(val){
             if(val == 1){
                 return '小b'

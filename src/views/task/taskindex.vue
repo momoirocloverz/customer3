@@ -155,9 +155,9 @@ export default {
   created(){
     this.getTasklist()
   },
-  // mounted(){
-  //   this.getTasklist()
-  // },
+  mounted(){
+    // this.getTasklist()
+  },
   methods: {
     getTasklist(){
       this.loading = true

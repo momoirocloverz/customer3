@@ -7,7 +7,7 @@
                 </template>
             </el-tabs>
             <div class="tabContentCon">
-                <div v-if="parentType == 2">
+                <div v-if="parentType != 1">
                     <issueComplete v-show="activeName == 'first'"/>
                     <issueComError v-show="activeName == 'second'"/>
                 </div>

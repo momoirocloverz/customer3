@@ -19,7 +19,7 @@
                     <el-table-column prop="rewardAndPublish" label="奖惩(元)" ></el-table-column>
                     <el-table-column prop="deduction" label="扣款(元)" ></el-table-column>
                     <el-table-column prop="salaryTotal" label="应发收入(元)" ></el-table-column>                    
-                    <div v-if="parentPaytype == 2">
+                    <div v-if="parentPaytype == 2 || parentPaytype == 3">
                         <el-table-column>
                             <template slot="header" slot-scope="scope">
                                 <span>付款手续费</span>   

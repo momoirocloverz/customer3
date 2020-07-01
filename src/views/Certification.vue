@@ -107,22 +107,6 @@
                     </div>
                 </el-form>  
             </div>
-<!--
-            <div class="simple3 commonShadow" v-show="show4">
-                <div class="simpleTitle">请选择角色</div>
-                <div class="roleScrollCon">
-                    <template v-for="(item,index) in rolesList">
-                        <div class="roleItemCon">
-                            <div>{{item.name}}</div>
-                            <div>{{item.type}}</div>
-                        </div>
-                    </template>
-                </div>
-                <div>
-                    <el-button type="primary" size="small" class="simpleBtn3" :disabled="empty4" @click="submit4Now">下一步</el-button>
-                </div>
-            </div>
--->
         </div>
     </div>
 </template>
@@ -132,7 +116,6 @@
         name: 'Certification',
         data(){
              return {
-                 rolesList:[],
                  fileList: [],
                  upload_form: {},
                  addressArr:[],
@@ -140,7 +123,6 @@
                  show1:false,
                  show2:false,
                  show3:false,
-                 show4:false,
                  labelPosition:'top',
                  simple1Form:{
                      idCard:'',
@@ -235,13 +217,6 @@
                 }else {
                     return true
                 }
-            },
-            empty4(){
-//                if(this.simple2Form.idCard && this.simple2Form.realName && this.simple2Form.mobile){
-                    return false
-//                }else {
-//                    return true
-//                }
             },
         },
         mounted(){
@@ -413,8 +388,6 @@
               this.complicated1Form.businessLicense = `${bucketHost}${key}${watermark}`
               this.$refs.complicated1Form.validateField('businessLicense')
               this.getToken()
-            },
-            submit4Now(){
             },
             action3(){
                   let params = {
@@ -628,29 +601,6 @@
                 }
                 .step2Con {
                     margin-bottom: 20px;
-                }
-            }
-            .simple3 {
-                height:586px;
-                margin-top: 27px;
-                .simpleTitle {
-                    color: #303133;
-                    font-size: 24px;
-                    font-weight: 500;
-                    margin-bottom: 40px;
-                }
-                .simpleBtn3 {
-                    width: 100%;
-                    margin-top: 40px;
-                }
-                .roleScrollCon {
-                    overflow-y: scroll;
-                    height: 350px;
-                }
-                .roleItemCon {
-                    height: 86px;
-                    margin-bottom: 20px;
-                    cursor: pointer;
                 }
             }
         }

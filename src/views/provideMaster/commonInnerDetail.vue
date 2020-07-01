@@ -345,6 +345,7 @@
                                 type:bridge.type,
                                 salaryTotal:bridge.salaryTotal,
                                 createdAt:bridge.createdAt,
+                                feeDate:bridge.feeDate,
                             },
                         };
                         break;    

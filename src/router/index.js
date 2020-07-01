@@ -3,9 +3,11 @@ import VueRouter from 'vue-router'
 import login from '@/views/login.vue';
 import Certification from '@/views/Certification.vue';
 import empty from '@/views/empty.vue';
+import emptyProtecter from '@/views/emptyProtecter.vue';
 import layout from '@/views/layout.vue';
 import NotFoundComponent from '@/views/404.vue';
 import stableHeader from '@/views/stableHeader.vue';
+import store from "@/store";
 
 Vue.use(VueRouter)
 
@@ -47,6 +49,10 @@ const routes = [
                 path:'',
                 // name:'taskIndexList',
                 component: () => import('@/views/task/taskindex.vue'),
+                beforeEnter: (to, from, next) => {
+                  store.commit('setTabnumber', '0');
+                  next();
+                }
               }
             ]
           },
@@ -81,6 +87,10 @@ const routes = [
                 path:'',
                 // name:'taskIndexList',
                 component: () => import('@/views/scheduling/list.vue'),
+                beforeEnter: (to, from, next) => {
+                  store.commit('setTabnumber', '1');
+                  next();
+                }
               }
             ]
           },
@@ -94,6 +104,10 @@ const routes = [
                       component: function () {
                           return import(/* webpackChunkName: "contacts" */ '../views/task/rewardAndPunishment.vue')
                       },
+                      beforeEnter: (to, from, next) => {
+                          store.commit('setTabnumber', '2');
+                          next();
+                        }
                   },
                 ]
             },
@@ -210,7 +224,7 @@ const routes = [
             
           {
               path: 'incomeManagement',
-              component: empty,
+              component: emptyProtecter,
               children: [
                   {
                       path: '',
@@ -237,7 +251,7 @@ const routes = [
           },
           {
               path: 'provideMaster',
-              component: empty,
+              component: emptyProtecter,
               children: [
                   {
                       path: '',

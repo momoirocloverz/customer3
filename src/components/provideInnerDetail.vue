@@ -99,7 +99,7 @@
             </div>
             <div class="localFlex">
                 <div>扣款类型</div>
-                <div>{{ detailInfo.obj.type }}</div>
+                <div><span v-if="detailInfo.obj.type == '系统使用费' ">{{ detailInfo.obj.feeDate |cutter }}</span>{{ detailInfo.obj.type }}</div>
             </div>
             <div class="localFlex">
                 <div>扣款金额</div>
@@ -125,12 +125,13 @@ export default {
         return {
         }
     },
-    mounted(){
-      console.log( this.detailInfo)
-     
-    },
-    methods:{
-        
+    filters:{
+        cutter(val){
+            if( val ){
+                let arr = val.split('-');
+                return arr[1]+arr[2];
+            }
+        },
     },
 }
 </script>

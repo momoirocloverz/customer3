@@ -4,7 +4,7 @@
             <div class="topCon">
                 <div class="titleText">
                     <img src="../assets/logo.png" alt="">
-                    万才企业版
+                    <div class="name">万才企业版</div>
                 </div>
                 <div class="rightTopPart f14">
                     <div class="breadCon"></div>
@@ -42,7 +42,9 @@
                 <el-button type="info" size="small" class="sameWidthBtn"  @click="cloudVisible = false">关 闭</el-button>
             </div>
         </el-dialog>
-        
+        <div v-if="multipleVisible" class="fakeMask">
+            <MultipleRoles @closeAction="closeBridge" :rolesList="rolesArr"></MultipleRoles>
+        </div>
     </div>
 </template>
 <script>
@@ -51,6 +53,8 @@
         name: 'commonHeader',
         data() {
             return {
+                rolesArr:[],
+                multipleVisible:false,
                 logoSrc:require('@/assets/logo.png'),
                 name:'',
                 existMultipleRoles:false,
@@ -71,6 +75,9 @@
 //            this.checkOnlineInfo();
         },
         methods: {
+            closeBridge(){
+                this.multipleVisible = false;
+            },
             initAction() {
                 if( this.getWebInfo.customerInfo.type ){
                     this.logoSrc = this.getWebInfo.avatar ;
@@ -84,7 +91,7 @@
                     }
                 }
                 let params1 = {
-                    calLatest:true,
+                    calLatest:false,
                 };
                 this.ApiLists.fetchMobileAccount(params1).then(res=>{
                     let { respCode,data } = res;
@@ -92,13 +99,16 @@
                         if( data ){
                             if( data.length > 1 ){
                                 this.existMultipleRoles =  true;
+                                this.rolesArr = data;
                             }else{
                                 this.existMultipleRoles =  false;
+                                this.rolesArr = [];
                             }
                         }else{
                             this.existMultipleRoles =  false;
+                            this.rolesArr = [];
                         }
-                    }   
+                    } 
                 }).catch(err=>{
                     console.log('err',err);
                 })
@@ -136,7 +146,7 @@
                         this.$store.commit('changeAccountActiveIndex', '1');
                         break;
                     case 'b':
-
+                        this.multipleVisible = true;
                         break;
                     case 'c':
                         this.$router.push({
@@ -184,6 +194,17 @@
             font-size: 16px;
             margin-bottom: 20px;
         }
+        .fakeMask {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            overflow: hidden;
+            margin: 0;
+            z-index: 1000;
+            background-color: rgba(0,0,0,0.7)
+        }
         .accountInfo {
             font-size: 14px;
             margin-bottom: 20px;
@@ -205,20 +226,30 @@
                 flex-direction: row;
                 justify-content:space-between;
                 align-content: center;
+                padding-left: 40px;
+                padding-right: 40px;
+                box-sizing: border-box;
                 .titleText {
-                    display: flex;
-                    // margin: 0 40px;
                     height:80px;
-                    justify-content: center;
+                    width: 200px;
+                    justify-content:flex-start;
+                    display: flex;
                     align-items: center;
                     color: #303133;
                     text-align: center;
                     font-size:20px;
+                    .name {
+                        line-height: 20px;
+                          width: 100px;
+                          height: 20px;
+                          font-size: 20px;
+                          font-weight: 500;
+                          color: rgba(48, 49, 51, 1);
+                        }
                     img{
-                        display: flex;
                         width:40px;
                         height:40px;
-                        margin-right:5px;
+                        margin-right:16px;
                     }
                 }
                 .leftTopCon {
@@ -227,7 +258,6 @@
                 .rightTopPart {
                     height:80px;
                     box-sizing: border-box;
-                    padding-right:40px;
                     display: flex;
                     justify-content: space-between;
                     align-content: center;

@@ -63,6 +63,9 @@
         >
       </div>
     </el-dialog>
+        <div v-if="multipleVisible" class="fakeMask">
+            <MultipleRoles @closeAction="closeBridge" :rolesList="rolesArr"></MultipleRoles>
+        </div>
   </div>
 </template>
 <script>
@@ -71,6 +74,8 @@ export default {
   name: 'root',
   data() {
     return {
+        rolesArr:[],
+        multipleVisible:false,
         existMultipleRoles:false,
         logoSrc:require('@/assets/logo.png'),
       balance: 0,
@@ -120,6 +125,9 @@ export default {
     this.activeIndex = this.getMenuActiveIndex;
   },
   methods: {
+      closeBridge(){
+          this.multipleVisible = false;
+      },
     handleSelect(key){
         this.$store.commit('changeMenuActiveIndex', key)
         switch(key){
@@ -136,6 +144,7 @@ export default {
                 }).catch(err=>{
                     console.log('err',err);
                 });
+                this.$store.commit('setTabnumber','0');
                 break;
             case '3':
                 this.$router.push({
@@ -176,7 +185,7 @@ export default {
             }
         }
         let params1 = {
-            calLatest:true,
+            calLatest:false,
         };
         this.ApiLists.fetchMobileAccount(params1).then(res=>{
             let { respCode,data } = res;
@@ -184,11 +193,14 @@ export default {
                 if( data ){
                     if( data.length > 1 ){
                         this.existMultipleRoles =  true;
+                        this.rolesArr = data;
                     }else{
                         this.existMultipleRoles =  false;
+                        this.rolesArr = [];
                     }
                 }else{
                     this.existMultipleRoles =  false;
+                    this.rolesArr = [];
                 }
             }   
         }).catch(err=>{
@@ -207,7 +219,7 @@ export default {
                 this.$store.commit('changeAccountActiveIndex', '1');
                 break;
             case 'b':
-                
+                this.multipleVisible = true;
                 break;
             case 'c':
                 this.$router.push({
@@ -260,6 +272,17 @@ export default {
     margin-right: 5px;
     cursor: pointer;
   }
+    .fakeMask {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow: hidden;
+        margin: 0;
+        z-index: 1000;
+        background-color: rgba(0,0,0,0.7)
+    }
   .accountAmountCon {
     font-size: 16px;
     margin-bottom: 20px;
@@ -320,7 +343,6 @@ export default {
       }
       .titleText {
         line-height: 20px;
-        // margin: 0 40px;
         display: flex;
         align-items: center;
         flex: 2;

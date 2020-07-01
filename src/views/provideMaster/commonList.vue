@@ -74,6 +74,10 @@
                         value: '2',
                         label: '线上发放-薪企云服'
                     },
+                    {
+                        value: '3',
+                        label: '线上发放-万才科技'
+                    },
                 ],
                 orderNumber:'',
                 daterange:'',
@@ -192,6 +196,8 @@
                         return '线下发放'
                     }else if(row.payWay == '2'){
                         return '线上发放-薪企云服'
+                    }else if(row.payWay == '3'){
+                        return '线上发放-万才科技'
                     }
                 }else{
                     return '-'
@@ -266,6 +272,9 @@
 </script>
 <style scoped lang="scss">
     .provideMasterCon {
+        padding: 40px;
+        background-color: #fff;
+        box-sizing: border-box;
         .limitInput {
             width: 240px;
             margin-top: 10px;

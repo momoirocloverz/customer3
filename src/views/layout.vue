@@ -3,8 +3,8 @@
         <div class="silderBar">
           <el-tabs :tab-position="'left'"  v-model="tabNumber"  @tab-click="handleClick">
             <el-tab-pane :label="item.label" v-for="item in routerList" :key="item.key" >
-               <router-view/>
             </el-tab-pane>
+            <router-view/>
           </el-tabs>
         </div>
     </div>
@@ -19,15 +19,18 @@ export default {
       routerList:[
         {label:'任务',value:'/main/taskIndex',key:'1'},
         {label:'排班',value:'/main/schedulingIndex',key:'2'},
-        {label:'奖惩',value:'/main',key:'3'},
+        {label:'奖惩',value:'/main/rewardAndPunishment',key:'3'},
       ],
       tabNumber:0,
     }
   },
+  watch: {
+    $route: function(nval, val) {
+      this.tabNumber = this.$store.state.tabNumber
+    },
+  },
   created(){
     this.tabNumber = this.$store.state.tabNumber
-  },
-  computed: {
   },
   methods: {
     handleClick(){
@@ -43,8 +46,10 @@ export default {
   .layout{
     width: 100%;
     display: flex;
+      min-height:calc( 100vh - 80px );
     background: #f2f6fc;
     padding-top: 40px;
+      box-sizing: border-box;
     .silderBar {
       width:100vw;
       margin: 0 40px;

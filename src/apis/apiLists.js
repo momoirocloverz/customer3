@@ -206,6 +206,51 @@ const _apiLists = {
             params
         })
     },  
+    rewardAndPunishGetUser:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/trade/rewardAndPunish/getUser',
+            params
+        })
+    },  
+    getLinkAgeTask:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/trade/rewardAndPunish/getLinkAgeTask',
+            params
+        })
+    },  
+    getLinkAgeBatch:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/trade/rewardAndPunish/getLinkAgeBatch',
+            params
+        })
+    },  
+    getLinkAgeIndustry:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/trade/rewardAndPunish/getLinkAgeIndustry',
+            params
+        })
+    },      
+    addRewardAndPunish:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/trade/rewardAndPunish/add',
+            data,
+        })
+    },
+    operateRewardAndPunish:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/trade/rewardAndPunish/opers',
+            data,
+        })
+    },
+    
+    
+    
     
     
     
@@ -245,14 +290,6 @@ const _apiLists = {
             params
         })
     }, 
-    
-    
-    
-    
-    
-    
-    
-    
     waterMark:(params)=>{
         return instance({
             method: 'get',
