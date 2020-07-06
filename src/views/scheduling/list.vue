@@ -2,7 +2,7 @@
   <div class="taskList"> 
       <div class="main">
         <div class="seepage">
-          <el-button class="newTaskbtn" type="primary">发布任务123213</el-button>
+          <el-button class="newTaskbtn" type="primary">发布排班</el-button>
           <el-menu
             :default-active="activeIndex"
             class="el-menu-demo"
@@ -15,55 +15,43 @@
             <el-menu-item index="3">已结束</el-menu-item>
             <el-menu-item index="4">已关闭</el-menu-item>
           </el-menu>
-          <div class="searchbox">
-            <el-select v-model="moldValue" placeholder="任务类型" @change="search">
-              <el-option
-                v-for="item in mold"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-                >
-              </el-option>
-            </el-select>
-             <el-select v-model="settlementCyclevalue" placeholder="结算周期" @change="search">
-              <el-option
-                v-for="item in settlementCycle"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-                >
-              </el-option>
-            </el-select>
+          <div class="searchbox" style="width:240px">
+            <el-input placeholder="请输入内容" v-model="sblingValue" class="input-with-select" size="large">
+              <el-button slot="append" icon="el-icon-search" @click="searchName"></el-button>
+            </el-input>
           </div>
           <div class="setWhiteBg" v-loading="loading" element-loading-text="正在请求中..." v-if="taskListdata.length > 0">
             <!-- 进行中任务组件 -->
-            <li class="rightMinbox" v-for="(item,index) in taskListdata" :key="index"  >
+            <li class="rightMinbox" v-for="(item,index) in taskListdata" :key="index"  @click="checkDetail(item)">
               <div class="minBoxheader">
                 <div class="tasknametitle">
-                  <h3>{{item.taskName}}</h3>
-                  <div class="tagBox">
-                    <el-tag type="info">{{PUNCHWAY[item.punchWay]}}</el-tag>
-                    <el-tag type="info">核定{{item.authorizedNumber}}人</el-tag>
-                    <el-tag type="info">{{SETTLEMENTTYPE[item.settlementType]}}结</el-tag>
-                  </div>
-                  <el-tag v-if="item.taskType == 1" type="warning">{{TASKTYPE[item.taskType]}}</el-tag>
-                  <el-tag v-if="item.taskType == 2">{{item.recCustomerName}}∙{{TASKTYPE[item.taskType]}}</el-tag>
+                  <h3>{{item.schedulingName}}</h3>
                 </div>
-              </div>
+                <h2 style="color:#909399;" v-if="item.processStatus==1">{{PROCESSstatus[item.processStatus]}}</h2>
+                <h2 style="color:#409EFF;" v-if="item.processStatus==2">{{PROCESSstatus[item.processStatus]}}</h2>
+                </div>
               <div class="minBoxtext" >
-                <p>
-                  <i class="el-icon-circle-plus-outline"></i><span>{{item.price | priceFor}}</span>
-                </p>
                 <div class="timeAddress">
-                  <div><i class="el-icon-time"></i><span>{{item.startTime}} ~ {{item.endTime ?  item.endTime : '长期'}}</span></div>
-                  <div><i class="el-icon-location-outline"></i><span>{{item.workingPlace}}</span></div>
+                  <div><i class="el-icon-time"></i><span>{{item.workStartTimeMin}} ~ {{item.workEndTimeMax}}</span></div>
+                  <ul>
+                    <li>
+                      <span>排班人数 : </span>
+                      <h3>{{item.schedulingEmpCount}}</h3>
+                    </li>
+                      <li>
+                      <span>打卡人数 : </span>
+                      <h3 style="color:#409EFF;">{{item.schedulingPunchCount}}</h3>
+                    </li>
+                  </ul>
                 </div>
               </div>
               <div class="minBoxbtnPersonal" v-if="btnType=='个人'">
-                <el-button size="mini">任务设置</el-button>
-                <el-button size="mini" v-if="item.processStatus==1">新建排班</el-button>
-                <el-button size="mini" v-if="item.processStatus==2">排班管理</el-button>
-                <el-button size="mini" v-if="item.processStatus==2">查看排班</el-button>
+                <el-button size="mini" v-if="item.processStatus==1" type="danger" plain>关闭</el-button>
+                <el-button size="mini">复制</el-button>
+                <el-button size="mini" v-if="item.processStatus==2">修改单价</el-button>
+                <el-button size="mini" v-if="item.processStatus==2">去结算</el-button>
+                <el-button size="mini" v-if="item.processStatus==2">三方确认</el-button>
+                <el-button size="mini" v-if="item.processStatus==2">启用</el-button>
               </div>
               <div class="minBoxbtnEnterprise" v-if="btnType=='企业'">
                 <div style="display: flex; flex:2;">
@@ -83,9 +71,11 @@
             <div class="block">
               <el-pagination
                 @current-change="handleCurrentChange"
+                @size-change="handleSizeChange"
                 :current-page.sync="currentPage"
+                :page-sizes="[10, 20, 30, 40]"
                 :page-size="pageSize"
-                layout="prev, pager, next, jumper"
+                layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
               </el-pagination>
             </div>
@@ -107,49 +97,21 @@ export default {
     return {
       imgsrc:require('@/assets/task/welcome.png'),
       activeIndex: '1',
-      btnType:'企业',
+      btnType:'个人',
       tackType:1,
-      moldValue:'', // 搜索类型值
+      sblingValue:'', // 排班类型值
       settlementCyclevalue:'', // 搜索结算周期值
       loading: false,
-      mold: [
-        {label: '不限', value: -1},
-        {label: '自有任务', value: 1},
-        {label: '指派任务', value: 2},
-      ],
-      settlementCycle: [
-        {label: '不限', value: -1},
-        {label: '日结', value: 1},
-        {label: '月结', value: 2},
-        {label: '周结', value: 4},
-      ],
-      // 结算方式 字段
-      SETTLEMENTTYPE: {
-        1: '日', 
-        2: '月', 
-        3: '', 
-        4: '周', 
-      },
-      // 任务类型
-      TASKTYPE:{
-        1:'自有任务',
-        2:'指派任务'
-      },
-      // 打卡方式
-      PUNCHWAY:{
-        1:'扫码打卡',
-        2:'自主打卡'
-      },
       PROCESSstatus:{
         1:'待执行',
-        2:'执行中',
+        2:'待结算',
         3:'已完成',
-        4:'已关闭'
+        4:'已结束'
       },
       taskListdata:[],
       total:0,
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 10,
     }
   },
   created(){
@@ -159,17 +121,25 @@ export default {
   //   this.getTasklist()
   // },
   methods: {
+      checkDetail(item){
+          this.$router.push({
+              name: 'schDetails',
+              query:{
+                  id:item.schedulingId
+              }
+          })
+      },
     getTasklist(){
       this.loading = true
       let params = {
-        status: this.tackType,
-        taskType:this.moldValue === -1? '' : this.moldValue,
-        settleType:this.settlementCyclevalue === -1? '' : this.settlementCyclevalue,
+        processStatus: this.tackType,
+        type:2,
         pageNum: this.currentPage,
         pageSize:this.pageSize,
+        schedulingName: this.sblingValue,
 
       };
-      this.ApiLists.taskList(params).then(res => {
+      this.ApiLists.getschedulinglist(params).then(res => {
        if (res.respCode === 0) {
             this.taskListdata = res.data.list ? res.data.list : []
             this.total = res.data.total
@@ -191,8 +161,16 @@ export default {
         this.currentPage = val
         this.getTasklist()
     },
+    handleSizeChange(val){
+      this.pageSize = val
+      this.getTasklist()
+    },
     handleSelect(key, keyPath) {
       this.tackType = key
+      this.getTasklist()
+    },
+    //  名字搜索
+    searchName(){
       this.getTasklist()
     }
   }
@@ -294,8 +272,27 @@ export default {
           .timeAddress{
             display: flex;
             align-items: center;
-            &>div:first-child{
-              margin-right: 20px;
+            justify-content: space-between;
+            &>ul{
+              display: flex;
+              justify-content: space-between;
+              &>li{
+                display: flex;
+                justify-content: space-between;
+                font-size: 14px;
+                align-items: baseline;
+                span{
+                  margin-right:10px;
+                }
+                h3{
+                  color:#303133;
+                  font-size: 20px;
+                  font-weight: 500;
+                }
+              }
+              &>li:first-child{
+                margin-right:1.25rem /* 20/16 */;
+              }
             }
           }
           i{

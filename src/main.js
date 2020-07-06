@@ -6,6 +6,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import '@/assets/resetGlobalStyle.scss';
 import dayjs from '@/utils/day.js';
+import PricePlugin from './utils/priceAsPlugin';
 import qrcode from '@/utils/qrcode.js';
 import CONST from '@/utils/CONST.js';
 import ApiLists from '@/apis/apiLists.js';
@@ -24,6 +25,7 @@ Vue.use(BaiduMap, {
 })
 Vue.use(ApiLists);
 Vue.use(dayjs);
+Vue.use(PricePlugin);
 Vue.use(qrcode);
 Vue.use(ElementUI);
 Vue.use(CONST);

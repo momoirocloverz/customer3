@@ -248,6 +248,43 @@ const _apiLists = {
             data,
         })
     },
+    schedulingDetail:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/biz-center/scheduling/detail',
+            params
+        })
+    }, 
+    getSchedulingCode:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/biz-center/schedulingCodeApply/getCode',
+            params
+        })
+    }, 
+    applyListCustomer:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/biz-center/schedulingCodeApply/applyListCustomer',
+            params
+        })
+    }, 
+    confirmApplySchCode:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/biz-center/schedulingCodeApply/confirmApply',
+            data,
+        })
+    },
+    fetchTalentByIdCard:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/talent/getByIdCard',
+            params
+        })
+    },
+    
+    
     
     
     

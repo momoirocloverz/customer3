@@ -286,12 +286,11 @@ const routes = [
       component: function () {
         return import(/* webpackChunkName: "stableHeader" */ '../views/stableHeader.vue')
       },
-      // name:'taskDetails',
       children:[
         {
           path: 'details',
-          name: 'details',
-          // component: () => import('@/views/scheduling/details.vue'),
+          name: 'schDetails',
+           component: () => import('@/views/contacts/tempContainer.vue'),
         }
       ]
     },

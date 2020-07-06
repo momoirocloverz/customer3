@@ -7,7 +7,7 @@
             </div>
           <div class="roleScrollCon">
               <template v-for="(item,index) in rolesList">
-                  <div class="roleItemCon" :class="clickTrackId ==item.customerId ? `roleBreak${item.cusType}` :'' " @click="selectItem(item)">
+                  <div class="roleItemCon" :class="[clickTrackId ==item.customerId ? `roleBreak${item.cusType}` :'' , `roleHover${item.cusType}`]" @click="selectItem(item)">
                       <div class="leftPart">
                           <div class="mb10 BlackHere">
                             <div  v-if="item.cusType == 2">{{item.cusShortName}}（{{item.roleName}}）</div>
@@ -96,16 +96,18 @@ export default {
                     this.shutCurrent();
                     if( res.data.isAuthenticate != null   ){
                         if( res.data.isAuthenticate ){
-                            this.$router.push({
+                            this.$router.replace({
                                 path: '/main',
+                            }).catch(err=>{
+                                console.log(err);
                             });
-                            location.reload();
+                            this.$store.commit('changeMenuActiveIndex', '1')
+                            this.$forceUpdate();
                         }
                     }
                 }
             })
         },
-        
     }
 }
 </script>
@@ -130,21 +132,25 @@ export default {
             background:rgba(64,158,255,0.1);
             border-radius:8px;
             color: #409EFF;
+        }
+        .roleHover2 {
             &:hover {
                 background:rgba(64,158,255,0.1);
                 border-radius:8px;
                 color: #409EFF;
             }
         }
-        .roleBreak1 {
-            background:rgba(230,162,60,0.1);
-            border-radius:8px;
-            color: #E6A23C;
+        .roleHover1 {
             &:hover {
                 background:rgba(230,162,60,0.1);
                 border-radius:8px;
                 color: #E6A23C;
             }
+        }
+        .roleBreak1 {
+            background:rgba(230,162,60,0.1);
+            border-radius:8px;
+            color: #E6A23C;
         }
         .BlackHere {
             color: #303133;

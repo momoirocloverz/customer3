@@ -137,6 +137,7 @@ export default {
         cuteVisible:false,
         dialogTitle:'驳回',
         currentTarget:{},
+        trackType:'1',
         titleMap:{
             1:'驳回',
             2:'同意',
@@ -216,13 +217,34 @@ export default {
    },
   methods: {
       cancelGhostAction(){
-//          this.currentTarget.;
+          this.cuteVisible = false;
       },
       confirmGhostAction(){
-//          operateRewardAndPunish
+          let data = {
+              id:this.currentTarget.id,
+          };
+          let tempMap = {
+              1:3,
+              2:1,
+              3:4,
+          };
+          data.oper = tempMap[this.trackType];
+          this.ApiLists.operateRewardAndPunish(data).then(res=>{
+              let { data,respCode } = res;
+              if( respCode === 0 ){
+                  this.$message({
+                    message: `${this.dialogTitle}成功`,
+                    type: 'success'
+                });
+                  this.cuteVisible = false;
+                  this.fetchLists();
+              }
+          }).catch(err=>{
+              console.log('err',err);
+          })
       },
       popDialog(item,flag){
-          console.log( 'flag',flag,item );
+          this.trackType = flag;
           this.dialogTitle = this.titleMap[flag];
           this.cuteVisible = true;
           this.currentTarget = item;

@@ -8,7 +8,7 @@
         </div>
         <div class="headerSilderBar">
           <el-menu
-            :default-active="activeIndex"
+            :default-active="getMenuActiveIndex"
             class="el-menu-demo mainMenu"
             mode="horizontal"
             @select="handleSelect"
@@ -17,10 +17,10 @@
             <el-menu-item index="2">任务/排班</el-menu-item>
             <el-menu-item index="3">通讯录</el-menu-item>
           </el-menu>
-            <el-dropdown class="loginDropdown" trigger="hover" @command="handleCommand">
+            <el-dropdown class="loginDropdown" trigger="click" @command="handleCommand" @click.native="triggerAction">
                 <span class="el-dropdown-link loginName">
-                    <img :src="logoSrc">
-                    <span>{{ name }} </span>
+                    <img :src="getWebInfo.avatar">
+                    <span>{{ getWebInfo.customerInfo.type == 1 ?  getWebInfo.customerInfo.realName : getWebInfo.customerInfo.shortName }}</span>
                     <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
@@ -77,7 +77,6 @@ export default {
         rolesArr:[],
         multipleVisible:false,
         existMultipleRoles:false,
-        logoSrc:require('@/assets/logo.png'),
       balance: 0,
       activeIndex:'1',
       name: '',
@@ -113,18 +112,12 @@ export default {
   computed: {
     ...mapGetters(['getMenuActiveIndex', 'getWebInfo']),
   },
-  watch: {
-    $route: function(nval, val) {
-      if (nval.path == '/main') {
-        this.$store.commit('changeMenuActiveIndex', '1')
-      }
-    },
-  },
   mounted() {
-    this.initAction()
-    this.activeIndex = this.getMenuActiveIndex;
   },
   methods: {
+      triggerAction(){
+          this.initAction()
+      },
       closeBridge(){
           this.multipleVisible = false;
       },
@@ -173,17 +166,6 @@ export default {
         })
     },
     initAction() {
-        if( this.getWebInfo.customerInfo.type ){
-            this.logoSrc = this.getWebInfo.avatar ;
-            switch( this.getWebInfo.customerInfo.type ){
-                case 1:
-                    this.name = this.getWebInfo.customerInfo.realName;
-                    break;
-                case 2:
-                    this.name = this.getWebInfo.customerInfo.shortName
-                    break;    
-            }
-        }
         let params1 = {
             calLatest:false,
         };

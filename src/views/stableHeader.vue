@@ -8,10 +8,10 @@
                 </div>
                 <div class="rightTopPart f14">
                     <div class="breadCon"></div>
-                    <el-dropdown class="loginDropdown" trigger="hover" @command="handleCommand">
+                    <el-dropdown class="loginDropdown" trigger="click" @command="handleCommand" @click.native="triggerAction">
                         <span class="el-dropdown-link loginName">
-                            <img :src="logoSrc">
-                            <span>{{ name }} </span>
+                            <img :src="getWebInfo.avatar">
+                            <span>{{ getWebInfo.customerInfo.type == 1 ?  getWebInfo.customerInfo.realName : getWebInfo.customerInfo.shortName }} </span>
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
@@ -55,8 +55,6 @@
             return {
                 rolesArr:[],
                 multipleVisible:false,
-                logoSrc:require('@/assets/logo.png'),
-                name:'',
                 existMultipleRoles:false,
                 netAccount:'5855700282900000034',
                 cloudVisible:false,
@@ -71,25 +69,16 @@
             ])
         },
         mounted() {
-            this.initAction();
 //            this.checkOnlineInfo();
         },
         methods: {
+            triggerAction(){
+                  this.initAction()
+              },
             closeBridge(){
                 this.multipleVisible = false;
             },
             initAction() {
-                if( this.getWebInfo.customerInfo.type ){
-                    this.logoSrc = this.getWebInfo.avatar ;
-                    switch( this.getWebInfo.customerInfo.type ){
-                        case 1:
-                            this.name = this.getWebInfo.customerInfo.realName;
-                            break;
-                        case 2:
-                            this.name = this.getWebInfo.customerInfo.shortName
-                            break;    
-                    }
-                }
                 let params1 = {
                     calLatest:false,
                 };
