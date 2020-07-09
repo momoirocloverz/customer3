@@ -283,6 +283,35 @@ const _apiLists = {
             params
         })
     },
+    schedulFastAddEmp:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/biz-center/schedulingEmployee/fastAddEmp',
+            data,
+        })
+    },
+    talentRecommend:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/user-center/talent/recommend',
+            data,
+        })
+    },
+    codeBindingCustomer:(params)=>{
+        return instance({
+            method: 'get',
+            url: '/user-center/partner/bindingCustomer',
+            params
+        })
+    },
+    talentUpdateSkill:(data)=>{
+        return instance({
+            method: 'post',
+            url: '/user-center/talent/updateSkill',
+            data,
+        })
+    },
+    
     
     
     

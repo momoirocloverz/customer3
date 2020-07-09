@@ -15,6 +15,6 @@ export default {
 <style lang="scss" scoped>
     .contactsMasterCon {
         height: 100%;
-        min-height: 100vh;
+        min-height: calc( 100vh - 80px );
     }
 </style>

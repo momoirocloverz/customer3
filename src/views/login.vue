@@ -278,25 +278,9 @@ c）、您在服务中止或终止之前已经与其他用户达成交易且已�
                 <span class="changeColorHere"><div class="fakeIcon2 fakeIcon"></div></span>
             </div>
         </el-dialog>
-        
-        <el-dialog title="请选择角色" class="setRoot6Scoped setMiddleDialog"  :visible.sync="roleVisible2" width="520px"  :close-on-click-modal="false"  border>
-            <div class="simple3">
-                <div class="roleScrollCon">
-                    <template v-for="(item,index) in rolesList">
-                        <div class="roleItemBreakCon" :class="clickTrackId ==item.customerId ? `roleBreak${item.cusType}` :'' " @click="selectItem(item)">
-                            <div>
-                                <div>{{item.cusShortName}}<span v-if="item.cusType == 1">（{{ item.cusRoleType == 1  ? '管理员' : item.roleName}}）</span></div>
-                                <div class="typeIconHolder" :class=" 'typeIcon'+item.cusType "></div>
-                            </div>
-                            <div class="iconActive" :class=" clickTrackId ==item.customerId ? `iconActive${item.cusType}` :'' "></div>
-                        </div>
-                    </template>
-                </div>
-                <div>
-                    <el-button type="primary" size="small" class="simpleBtn3" :disabled="empty4" @click="submitNow">下一步</el-button>
-                </div>
-            </div>
-        </el-dialog>
+        <div v-if="roleVisible2" class="fakeMask">
+            <MultipleRoles @closeAction="closeBridge" :rolesList="rolesList"></MultipleRoles>
+        </div>
     </div>
 </template>
 <script>
@@ -355,17 +339,9 @@ c）、您在服务中止或终止之前已经与其他用户达成交易且已�
                     ],
                 },
                 itemBridge:{},
-                
             }
         },
         computed:{
-            empty4(){
-                if(this.clickTrackId){
-                    return false
-                }else{
-                    return true
-                }
-            },
             isEmptyForm(){
                 if(this.isTabPhone){
                     if(this.loginForm.account && this.loginForm.password && this.checked ){
@@ -385,13 +361,13 @@ c）、您在服务中止或终止之前已经与其他用户达成交易且已�
         mounted(){
             this.clearStateAction();
         },
-        methods:{
+        methods:{       
+            closeBridge(){
+                this.roleVisible2 = false;
+            },
             selectItem(item){
                 this.clickTrackId = item.customerId;
                 this.itemBridge = item;
-            },
-            submitNow(){    
-                this.special2Step( this.itemBridge.loginName );
             },
             selectRoleAction(item){
                 this.activeNow = item;   
@@ -559,6 +535,17 @@ c）、您在服务中止或终止之前已经与其他用户达成交易且已�
         height: 100vh;
         min-height: 500px;
     }
+    .fakeMask {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow: hidden;
+        margin: 0;
+        z-index: 1000;
+        background-color: rgba(0,0,0,0.7)
+    }
     .roleItemCon {
         display: flex;
         justify-content:space-between;
@@ -587,81 +574,6 @@ c）、您在服务中止或终止之前已经与其他用户达成交易且已�
     }
     .changeColorHere {
         margin-right: 20px;
-    }
-    .simple3 {
-        .simpleBtn3 {
-            width: 100%;
-            margin-top: 40px;
-        }
-        .roleScrollCon {
-            overflow-y: scroll;
-            height: 420px;
-        }
-        .typeIconHolder {
-            height: 20px;
-            width: 70px;
-            margin-top: 10px;
-            background-image: url(../assets/person_tag.svg);
-            background-origin: border-box;
-            background-repeat: no-repeat;
-            background-size:cover;
-            background-position: center;
-        }
-        .typeIcon1 {
-            background-image: url(../assets/company_tag.svg);
-        }
-        .typeIcon2 {
-            background-image: url(../assets/person_tag.svg);
-        }
-        .roleItemBreakCon {
-            display: flex;
-            justify-content: space-between;
-            align-content: center;
-            align-items: center;
-            height: 86px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            box-sizing: border-box;
-            padding: 0 20px;
-            font-size: 16px;
-            line-height: 16px;
-            font-weight: 500;
-        }
-        .iconActive {
-            height: 20px;
-            width: 20px;
-            background-origin: border-box;
-            background-repeat: no-repeat;
-            background-size:cover;
-            background-position: center;
-        }
-        .iconActive1 {
-            background-image: url(../assets/detail_blue.svg);
-        }
-        .iconActive2 {
-            background-image: url(../assets/detail_orange.svg);
-        }
-        .roleBreak1 {
-            background:rgba(64,158,255,0.1);
-            border-radius:8px;
-            color: #409EFF;
-            &:hover {
-                background:rgba(64,158,255,0.1);
-                border-radius:8px;
-                color: #409EFF;
-            }
-        }
-        .roleBreak2 {
-            background:rgba(230,162,60,0.1);
-            border-radius:8px;
-            color: #E6A23C;
-            &:hover {
-                background:rgba(230,162,60,0.1);
-                border-radius:8px;
-                color: #E6A23C;
-            }
-        }
-        
     }
     .fakeIcon {
         width: 20px;
@@ -780,15 +692,6 @@ c）、您在服务中止或终止之前已经与其他用户达成交易且已�
             .el-dialog {
               border-radius: 10px;
               height: 324px;
-            }
-            .el-dialog__body {
-                padding: 10px 20px 0;
-            }
-        }
-        .setRoot6Scoped {
-            .el-dialog {
-              border-radius: 10px;
-              height:586px;
             }
             .el-dialog__body {
                 padding: 10px 20px 0;

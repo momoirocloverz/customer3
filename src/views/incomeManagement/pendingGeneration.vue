@@ -46,8 +46,8 @@
                     <span class="co-blue cursor pl10" @click="openTalent()">重新选择</span>
                 </div>
             </el-form-item>
-            <el-form-item label="其他设置">
-                <el-checkbox-group class="label-col" v-model="setType">
+            <el-form-item label="其他设置" style="height:40px;">
+                <el-checkbox-group class="label-col" v-model="setType" >
                     <el-checkbox label="1">包含非本订单项奖惩的惩罚金额</el-checkbox>
                     <el-checkbox label="2">排除所选条件下合计待发金额≤0的人员</el-checkbox>
                 </el-checkbox-group>
@@ -61,6 +61,20 @@
                     <div slot="reference"><i class="el-icon-warning-outline cursor co-blue"></i></div>
                 </el-popover>
             </el-form-item>
+            <el-form-item>
+                <el-checkbox-group class="label-col" v-model="newsetType">
+                    <el-checkbox label="1">包含非本订单的扣款金额</el-checkbox>
+                </el-checkbox-group>
+                <el-popover
+                        placement="top-start"
+                        title=""
+                        width="200"
+                        trigger="hover"
+                        class="label-icon"
+                        content="选中后，如所选人员有所选条件以外的待发放扣款金额，亦将加入该订单">
+                    <div slot="reference"><i class="el-icon-warning-outline cursor co-blue"></i></div>
+                </el-popover>
+            </el-form-item>            
             <el-form-item label="">
                 <el-button type="primary" size="small" class="sameWidthBtn" @click="submit()">
                     生成待发放订单
@@ -201,7 +215,8 @@
                 },
                 multipleSelection:[],//当页
                 multipleSelectionAll:[],//所有分页
-                setType: ['1','2'],
+                setType: ['2','0'],
+                newsetType:['0'],
                 dialogTaskVisble: false,
                 dialogTalentVisble: false,
                 dateRange: '',
@@ -217,6 +232,9 @@
         },
         watch: {
             setType:function (val){
+                console.log(val)
+            },
+            newsetType:function (val){
                 console.log(val)
             }
         },
@@ -426,12 +444,15 @@
             submit() {
                 let _this = this;
                 _this.loading = true;
-                let contiansReward = 0,existZero = 0;
+                let contiansReward = 0,existZero = 0,contiansPublish=0; 
                 if(!this.setType.includes('1')){
                     contiansReward = 1
                 }
                 if(!this.setType.includes('2')){
                     existZero = 1
+                }
+                if(!this.newsetType.includes('1')){
+                    contiansPublish = 1
                 }
                 let params = {
                     taskIds:this.form.taskIds,
@@ -441,7 +462,8 @@
                     schedulingDateStart:this.form.startDate,
                     schedulingDateEnd:this.form.endDate,
                     contiansReward:contiansReward,
-                    existZero:existZero,
+                    existZero: existZero,
+                    contiansPublish:contiansPublish,
                 }
                 this.ApiLists.sendOrderQuery(params).then(res=>{
                     console.log(res)
@@ -541,13 +563,13 @@
         .label-icon {
             position: relative;
             display: flex;
-            top: -80px;
+            top: -40px;
             margin-left: 220px;
         }
 
         .label-col {
             display: flex;
-            flex-direction: column;
+            // flex-direction: column;
         }
 
         .title-top {

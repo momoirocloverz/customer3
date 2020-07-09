@@ -55,26 +55,37 @@ export default {
     },
     methods:{
         init(){
-            this.clickTrackId = this.getWebInfo.customerId; 
-            if( this.clickTrackId ){
-                this.empty4 = false;
-            }else{
+            let objectIsEmpty = Object.keys(this.getWebInfo).length == 0;
+            if( objectIsEmpty ){
                 this.empty4 = true;
+            }else{
+                this.clickTrackId = this.getWebInfo.customerId; 
+                if( this.clickTrackId ){
+                    this.empty4 = false;
+                }else{
+                    this.empty4 = true;
+                }
             }
         },
         shutCurrent(){
             this.$emit('closeAction');
         },
         submit4Now(){
-            if( this.clickTrackId == this.getWebInfo.customerId ){
-                this.shutCurrent();
-            }else{
+            let objectIsEmpty = Object.keys(this.getWebInfo).length == 0;
+            if( objectIsEmpty ){
                 this.special2Step(this.itemBridge.loginName);
+            }else{
+                if( this.clickTrackId == this.getWebInfo.customerId ){
+                    this.shutCurrent();
+                }else{
+                    this.special2Step(this.itemBridge.loginName);
+                }
             }
         },
         selectItem(item){
             this.clickTrackId = item.customerId;
             this.itemBridge = item;
+            this.empty4 = false;
         },
         special2Step(name){
             let params1 = {

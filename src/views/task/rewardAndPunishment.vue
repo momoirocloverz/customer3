@@ -1,5 +1,5 @@
 <template>
-  <div class="rewardAndPunishmentCon"> 
+  <div class="rewardAndPunishmentCon" v-loading="loading"> 
         <div class="searchCon">
             <div class="leftPart">
                 <el-date-picker v-model="month" type="month" class="setInputWidth" placeholder="选择月" value-format="yyyy-MM" @change="commonFetch"></el-date-picker>
@@ -204,6 +204,7 @@ export default {
         ],
         current:1,
         optionsTypes:[],
+        loading:true,
     }
   },
     computed:{
@@ -387,6 +388,7 @@ export default {
               type:this.type,
               status:this.status,
           };
+          this.loading = true;
           this.ApiLists.rewardAndPunishLists(params).then(res=>{
               let { data,respCode } = res;
               if( respCode === 0 ){
@@ -394,6 +396,8 @@ export default {
               }
           }).catch(err=>{
               console.log('err',err);
+          }).finally(() => {
+              this.loading = false
           })
       },
   }

@@ -15,7 +15,7 @@
         </div>
         <div class="flexCon" v-show="!searchClicked">
             <template v-for="(item,index) in contentArr">
-                <div class="itemSelfCon" @click="normalItem(item)">
+                <div class="itemSelfCon" @click="normalItem(item,index)">
                     <div class="itemTextCon">
                         <div class="itemText">{{item.attributeName}}</div>
                         <el-tooltip class="item" effect="dark" :content="item.description" placement="top" :disabled="!!!item.description">
@@ -42,7 +42,7 @@
                                             <div class="type0RealName">{{item.realNameAlias}}</div>
                                             <div class="type0Block">合作伙伴</div>
                                         </div>
-                                        <div class="type0PhoneOuter"><i class="el-icon-phone mr10"></i>{{item.mobile}}</div>
+                                        <div class="type0PhoneOuter" v-if="getWebInfo.customerInfo.type == 2"><i class="el-icon-phone mr10"></i>{{item.mobile}}</div>
                                     </div>
                                     <div class="type0bindTime">
                                         <span class="mr20">绑定时间</span>
@@ -50,7 +50,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="type0Sec">
+                            <div class="type0Sec" v-if="getWebInfo.customerInfo.type == 2">
                                 <el-popover placement="left"  width="100" trigger="hover">
                                     <div style="margin-top:10px;text-align:center">确定删除“{{item.realNameAlias}}”?</div>
                                     <div style="margin-top:10px;text-align:center">
@@ -67,11 +67,9 @@
                                 <div class="type1UpperFirst">
                                     <div class="type1DeatailCon">
                                         <div class="type1RealName">{{item.realNameAlias}}</div>
-                                        <div class="ageBlock" :class=" 'age'+item.sex ">
-                                            <div class="genderImg"  :class=" 'gender'+item.sex "></div> {{ String(item.age)+'岁'}}
-                                        </div>
-                                        <div class="type1Block">{{item.attributeName}}</div>
-                                        <div class="settleBlock">{{item.settlementTypeName}}</div>
+                                        <Gender :item="item" class="ageBlock" />
+                                        <div class="type1Block" v-if="getWebInfo.customerInfo.type == 2">{{item.attributeName}}</div>
+                                        <div class="settleBlock" v-if="getWebInfo.customerInfo.type == 2">{{item.settlementTypeName}}</div>
                                     </div>
                                     <div class="type1PhoneOuter">
                                         <i class="el-icon-phone mr10"></i>{{item.mobile}}
@@ -135,17 +133,29 @@
             <div class="waitTableCon">
                 <el-table :data="waitTableData" ref="waitTable" style="width: 100%" height="250px" @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
-                    <el-table-column>
+                    <el-table-column  width="120">
                         <template slot="header" slot-scope="scope">
                             已选中{{multipleSelection.length}}人
                         </template>
                         <template slot-scope="scope">
+                            {{ scope.row.realNameAlias }}
                         </template>
                     </el-table-column>
-                    <el-table-column  prop="date" label=""></el-table-column>
-                    <el-table-column  prop="date" label=""></el-table-column>
-                    <el-table-column  prop="date" label=""></el-table-column>
-                    <el-table-column  prop="date" label=""></el-table-column>
+                    <el-table-column width="80">
+                        <template slot-scope="scope">
+                            <Gender :item="scope.row"  />
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip>
+                        <template slot-scope="scope">
+                        技能标签 {{scope.row.skillVOS.join('/') }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip>
+                        <template slot-scope="scope">
+                        合作伙伴 {{scope.row.customerName }}
+                        </template>
+                    </el-table-column>
                 </el-table>
             </div>
         </div>
@@ -161,8 +171,8 @@
             </el-pagination>-->
           </div>
           <div class="spFlexBtn1">
-              <el-button type="info" size="small"  @click="refuseWait">拒绝</el-button>
-              <el-button type="primary" size="small"  @click="confirmWait">确认接收</el-button>
+              <el-button type="info" size="small" :disabled="!!!multipleSelection.length"  @click="refuseWait">拒绝</el-button>
+              <el-button type="primary" size="small" :disabled="!!!multipleSelection.length" @click="confirmWait">确认接收</el-button>
           </div>
       </div>
     </el-dialog>
@@ -215,14 +225,98 @@
                 <el-select v-model="attribute2" placeholder="属性" class="setInput3Width" @change="wait2Fetch">
                         <el-option v-for="(item,index) in option2s9" :key="item.id"  :label="item.attributeName"  :value="item.id"></el-option>
                     </el-select>
-                <el-select v-model="part2ner" placeholder="合作伙伴" class="setInput3Width" @change="wait2Fetch">
-                        <el-option v-for="(item,index) in option2s6" :key="item.customerId"  :label="item.customerName"  :value="item.customerId"></el-option>
+                <el-select v-model="gender2" placeholder="性别" class="setInput3Width" @change="wait2Fetch">
+                        <el-option v-for="(item,index) in option2s7" :key="item.value"  :label="item.label"  :value="item.value"></el-option>
+                    </el-select>
+                <el-select v-model="skill2" placeholder="标签" class="setInput3Width" @change="wait2Fetch">
+                        <el-option v-for="(item,index) in option2s8" :key="item.skillValue"  :label="item.skillName"  :value="item.skillValue"></el-option>
+                    </el-select>
+                <el-select v-model="settle2ment" placeholder="结算周期" class="setInput3Width" @change="wait2Fetch">
+                        <el-option v-for="(item,index) in options3Copy" :key="item.value"  :label="item.label"  :value="item.value"></el-option>
+                    </el-select>
+            </div>
+            <div class="waitTableCon">
+                <el-table :data="recommandTable" ref="recommandTable" style="width: 100%" height="250px" @selection-change="handle2SelectionChange">
+                    <el-table-column type="selection"></el-table-column>
+                    <el-table-column width="120">
+                        <template slot="header" slot-scope="scope">
+                            已选中{{multiple2Selection.length}}人
+                        </template>
+                        <template slot-scope="scope">
+                            {{scope.row.realNameAlias}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="" show-overflow-tooltip>
+                        <template slot-scope="scope">
+                            <div class="spIconCon">
+                                <Gender :item="scope.row" class="ageBlock" />
+                                <div class="type1Block">
+                                    {{scope.row.attributeName  }}
+                                </div>
+                                <div class="settleBlock">
+                                    {{scope.row.settlementTypeName  }}
+                                </div>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="" >
+                        <template slot-scope="scope">
+                        技能标签 {{scope.row.empCustomerVOS | customerFilter }}
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+      <div class="spFlexHere">
+          <div class="spFlex1">
+        <!--      <el-pagination
+              @current-change="handle2CurrentChange"
+              :current-page="current2"
+              :page-sizes="[20, 200, 300, 400]"
+              :page-size="pageSize"
+              layout="total, prev, pager, next, jumper"
+              :total="total2">
+            </el-pagination>-->
+          </div>
+          <div class="spFlexBtn2">
+              <el-button type="primary" size="small"  :disabled="!!!multiple2Selection.length"  @click="confirm2Wait">提交</el-button>
+          </div>
+      </div>
+    </el-dialog>
+
+
+    <el-dialog title="推荐"  class="setRoot41Scoped setMiddleDialog" :visible.sync="recomand2CopyVisible"  width="640px" :close-on-click-modal="false" border>
+        <div>
+            <el-tabs v-model="activeName1" @tab-click="handleClick1">
+                <el-tab-pane label="未绑定" name="first"></el-tab-pane>
+                <el-tab-pane label="已绑定" name="second"></el-tab-pane>
+            </el-tabs>
+            <div class="firstHere1">
+                <div>
+                    <el-select v-model="first2Age" placeholder="最小年龄" class="setInput3Width" @change="age2FirstChange(first2Age)">
+                        <el-option v-for="(item,index) in option2s4" :key="item.value"  :label="item.label"  :value="item.value"></el-option>
+                    </el-select>
+                    <span class="chinese">至</span> 
+                    <el-select v-model="sec2Age" placeholder="最大年龄" class="ml10 setInput3Width" @change="age2SecChange(sec2Age)">
+                        <el-option v-for="(item,index) in option2s5" :key="item.value"  :label="item.label"  :value="item.value"></el-option>
+                    </el-select>
+                </div>
+                <div>
+                    <el-input v-model.trim="wait2Name" size="small" class="lock2ItemInput" placeholder="请输入姓名" maxLength="30" clearable><el-button slot="append" icon="el-icon-search" @click="wait2Fetch"></el-button></el-input>
+                </div>
+            </div>
+            <div class="firstHere3">
+                <el-select v-model="attribute2" placeholder="属性" class="setInput3Width" @change="wait2Fetch" v-if="(getWebInfo.customerInfo.type == 1)&&(activeName1 == 'second' )  " >
+                        <el-option v-for="(item,index) in option2s9" :key="item.id"  :label="item.attributeName"  :value="item.id"></el-option>
                     </el-select>
                 <el-select v-model="gender2" placeholder="性别" class="setInput3Width" @change="wait2Fetch">
                         <el-option v-for="(item,index) in option2s7" :key="item.value"  :label="item.label"  :value="item.value"></el-option>
                     </el-select>
                 <el-select v-model="skill2" placeholder="标签" class="setInput3Width" @change="wait2Fetch">
                         <el-option v-for="(item,index) in option2s8" :key="item.skillValue"  :label="item.skillName"  :value="item.skillValue"></el-option>
+                    </el-select>
+                <el-select v-model="settle2ment" placeholder="结算周期" class="setInput3Width" @change="wait2Fetch" v-if="(getWebInfo.customerInfo.type == 1)&&(activeName1 == 'second' )  ">
+                        <el-option v-for="(item,index) in options3Copy" :key="item.value"  :label="item.label"  :value="item.value"></el-option>
                     </el-select>
             </div>
             <div class="waitTableCon">
@@ -259,22 +353,12 @@
                 </el-table>
             </div>
         </div>
-      <div class="spFlexHere">
-          <div class="spFlex1">
-        <!--      <el-pagination
-              @current-change="handle2CurrentChange"
-              :current-page="current2"
-              :page-sizes="[20, 200, 300, 400]"
-              :page-size="pageSize"
-              layout="total, prev, pager, next, jumper"
-              :total="total2">
-            </el-pagination>-->
+          <div class="spFlexBtn2 mt20">
+              <el-button type="primary" size="small" :disabled="!!!multiple2Selection.length"  @click="confirm2CopyWait">提交</el-button>
           </div>
-          <div class="spFlexBtn2">
-              <el-button type="primary" size="small"  @click="confirm2Wait">提交</el-button>
-          </div>
-      </div>
     </el-dialog>
+
+
   <el-dialog title="添加"  class="setRoot5Scoped setMiddleDialog" :visible.sync="bind1Visible"  width="480px"   :close-on-click-modal="false" border>
         <el-form ref="bind1Form" :model="bind1Form" :rules="bind1Rules" label-width="80px">
             <el-form-item prop="settlementType" label="结算周期">
@@ -294,20 +378,11 @@
     </el-dialog>
 
     <el-dialog title="添加"  class="setRoot6Scoped setMiddleDialog" :visible.sync="bind2Visible"  width="480px" :close-on-click-modal="false" border>
-        <!--<el-tabs v-model="activeName1" @tab-click="handleClick1">
-            <el-tab-pane label="二维码" name="first"></el-tab-pane>
-            <el-tab-pane label="邀请链接" name="second"></el-tab-pane>
-        </el-tabs>
-        <div class="activeName1 == 'first' ">
-        </div>
-        <div class="activeName1 == 'second' ">
-        </div>-->
         <div class="bind2ImgCon">
             <img  :src="tempSrc">
             <div class="text">万才个人用户使用个人版APP扫码即可添加</div>
         </div>
     </el-dialog>
-
     <el-dialog title="绑定合作伙伴"  class="setRoot7Scoped setMiddleDialog" :visible.sync="bind3Visible"  width="480px"   :close-on-click-modal="false" border>
         <div  class="codeCon">
             <div class="describe">验证码（30分钟内有效）</div>
@@ -320,6 +395,37 @@
             </div>
         </div>
     </el-dialog>
+
+    <el-dialog title="绑定合作伙伴"  class="setRoot7CopyScoped setMiddleDialog" :visible.sync="bind3CopyVisible"  width="480px"   :close-on-click-modal="false" border>
+        <div  class="codeCon">
+            <div class="boldBind">输入六位绑定验证码</div>
+            <div class="describeCopy">绑定码由企业提供</div>
+            <div class="multipleInput">
+                <div class="inputItem">
+                    <input ref="track1" type="text" maxlength="1" v-model.trim="matrix1" @input="matrixChange('matrix1')" >
+                </div>
+                <div class="inputItem">
+                    <input ref="track2" type="text" maxlength="1" v-model.trim="matrix2" @input="matrixChange('matrix2')" >
+                </div>
+                <div class="inputItem">
+                    <input ref="track3" type="text" maxlength="1" v-model.trim.number="matrix3" @input="matrixChange('matrix3')" >
+                </div>
+                <div class="inputItem">
+                    <input type="text" ref="track4" maxlength="1" v-model.trim="matrix4" @input="matrixChange('matrix4')" >
+                </div>
+                <div class="inputItem">
+                    <input ref="track5" type="text"  maxlength="1" v-model.trim="matrix5" @input="matrixChange('matrix5')" >
+                </div>
+                <div class="inputItem">
+                    <input ref="track6" type="text"  maxlength="1" v-model.trim="matrix6" @input="matrixChange('matrix6')" >
+                </div>
+            </div>
+            <div class="spFlexBtn2">
+              <el-button type="primary" size="small" class="mt20" :disabled="multipleDisable" @click="submitMatrix">提交认证</el-button>
+          </div>
+        </div>
+    </el-dialog>
+
     <el-dialog title="修改"  class="setRoot8Scoped setMiddleDialog" :visible.sync="editVisible"  width="480px" :close-on-click-modal="false" border>
         <div class="editUpperCon">
         <el-form ref="editForm" :model="editForm" :rules="editRules" label-width="140px">
@@ -347,6 +453,25 @@
         </el-form>
             </div>
     </el-dialog>
+    <el-dialog title="修改"  class="setRoot8CopyScoped setMiddleDialog" :visible.sync="editCopyVisible"  width="480px" :close-on-click-modal="false" border>
+        <div class="editUpperConCopy">
+        <el-form ref="editForm" :model="editForm" :rules="editRules" label-width="140px">
+            <div class="subEditUpper">
+            <el-form-item label="姓名">
+                <div>{{editForm.name}}</div>
+            </el-form-item>
+            <el-form-item prop="skill" label="技能标签(最多3个)">
+                <el-cascader size="small" class="setInput1Width"  v-model="editForm.skill" :props="props" @change="cascaderChange" :options="optionsCopy8" :show-all-levels="false" filterable></el-cascader>
+            </el-form-item>
+            </div>
+            <div class="spFlexBtn2">
+                <el-button type="primary" size="small" @click="submitEditForm('editForm')">确定修改</el-button>
+            </div>
+        </el-form>
+            </div>
+    </el-dialog>
+
+
   </div>
 </template>
 <script>
@@ -366,9 +491,17 @@ export default {
           }
       };
     return {
+        editCopyVisible:false,
+        matrix1:'',
+        matrix2:'',
+        matrix3:'',
+        matrix4:'',
+        matrix5:'',
+        matrix6:'',
         props: { 
             multiple: true
         },
+        recomand2CopyVisible:false,
         editVisible:false,
         optionsCopy8:[],
         editForm:{
@@ -387,6 +520,7 @@ export default {
         },
         bindCode:0,
         bind3Visible:false,
+        bind3CopyVisible:false,
         tempSrc:'',
         activeName1:'first',
         bind1Visible:false,
@@ -425,6 +559,12 @@ export default {
             { label:'月结',value:2 },
             { label:'周结',value:4 },
         ],
+        options3Copy:[
+            { label:'结算周期',value:'' },
+            { label:'日结',value:1 },
+            { label:'月结',value:2 },
+            { label:'周结',value:4 },
+        ],
         options4:[],
         options5:[],
         options6:[],
@@ -445,7 +585,7 @@ export default {
         searchResArr:[],
         contentArr:[],
         showPersonal:false,
-        showYellow:true,
+        showYellow:false,
         yellowNumber:0,
         waitIngVisible:false,
         waitIng2Visible:false,
@@ -459,7 +599,7 @@ export default {
         wait2Name:'',
         attribute2:'',
         option2s9:[],
-        part2ner:'',
+        settle2ment:'',
         option2s6:[],
         gender2:'',
         option2s7:[
@@ -488,23 +628,78 @@ export default {
   },
     filters:{
         customerFilter(value){
-            let arr1 = value.map(ele=>{
-                return ele.skillName;
-            })
-            let str = arr1.join('/')
-            return str;
+            if( value ){
+                let arr1 = value.map(ele=>{
+                    return ele.skillName;
+                })
+                let str = arr1.join('/')
+                return str;
+            }else{
+                return '-';
+            }
         },
     },
     computed:{
         ...mapGetters([
             'getWebInfo',
         ]),
+        multipleDisable(){
+            if(  !this.matrix1 || !this.matrix2 || !this.matrix3 || !this.matrix4 || !this.matrix5 || !this.matrix6  ){
+                return true
+            }else{
+                return false
+            }
+        },
     },
   mounted(){
       this.analyseCurrent();
       this.initSearch();
   },
   methods: {
+      submitMatrix(){
+          let params = {
+              code:`${this.matrix1}${this.matrix2}${this.matrix3}${this.matrix4}${this.matrix5}${this.matrix6}`,
+          }
+          this.ApiLists.codeBindingCustomer(params).then(res => {
+            let { data,respCode } = res;
+              if( respCode === 0 ){
+                  this.$message({
+                      message: '绑定成功',
+                      type: 'success'
+                  });
+                  this.bind3CopyVisible = false;
+              }
+          }).catch(err=>{
+              console.log('err',err);
+          })
+      },
+      matrixChange(target){
+          let numCurrent = +this[target];
+          if( isNaN(numCurrent) ){
+              this[target] = '';
+          }
+          if( this[target] ){
+              switch (target){
+                  case 'matrix1':
+                      this.$refs.track2.focus();
+                      break;
+                  case 'matrix2':
+                      this.$refs.track3.focus();
+                      break;
+                  case 'matrix3':
+                      this.$refs.track4.focus();
+                      break;
+                  case 'matrix4':
+                      this.$refs.track5.focus();
+                      break;
+                  case 'matrix5':
+                      this.$refs.track6.focus();
+                      break;
+                  case 'matrix6':
+                      break;
+              }
+          }          
+      },
       cascaderChange(value){
           if( value.length >= 3 ){
               this.optionsCopy8.forEach(ele=>{
@@ -643,19 +838,36 @@ export default {
               });
           }
           params.empCustomerSkills = empty;
-          this.ApiLists.talentUpdateAttr(params).then(res=>{
-              let { data,respCode } = res;
-              if( respCode === 0 ){
-                  this.$message({
-                      message: '修改成功',
-                      type: 'success'
-                  });
-                  this.editVisible = false;
-                  this.runSearch();
-              }
-          }).catch(err=>{
-              console.log('err',err);
-          })
+          if(this.getWebInfo.customerInfo.type  == 2){
+              this.ApiLists.talentUpdateAttr(params).then(res=>{
+                  let { data,respCode } = res;
+                  if( respCode === 0 ){
+                      this.$message({
+                          message: '修改成功',
+                          type: 'success'
+                      });
+                      this.editVisible = false;
+                      this.runSearch();
+                  }
+              }).catch(err=>{
+                  console.log('err',err);
+              })
+          }
+          if(this.getWebInfo.customerInfo.type  == 1){
+              this.ApiLists.talentUpdateSkill(params).then(res=>{
+                  let { data,respCode } = res;
+                  if( respCode === 0 ){
+                      this.$message({
+                          message: '修改成功',
+                          type: 'success'
+                      });
+                      this.editCopyVisible = false;
+                      this.runSearch();
+                  }
+              }).catch(err=>{
+                  console.log('err',err);
+              })
+          }          
       },
       submitEditForm(formName){
           this.$refs[formName].validate(valid => {
@@ -668,7 +880,12 @@ export default {
       },
       editCurrentItem(item){
           clearTimeout(window.mixContimer1);
-          this.editVisible = true;
+          if( this.getWebInfo.customerInfo.type == 1 ){
+              this.editCopyVisible = true;
+          }
+          if( this.getWebInfo.customerInfo.type == 2 ){
+              this.editVisible = true;
+          }
           this.setOption2();
           this.assignOptions();
           this.editForm.bindId = item.bindId;
@@ -679,7 +896,7 @@ export default {
           this.getIndustryArr();
           window.mixContimer1 = setTimeout(()=>{
               let temp = [];
-              item.empCustomerVOS.forEach(ele=>{
+              item.empCustomerVOS && item.empCustomerVOS.forEach(ele=>{
                   temp.push([ele.parentSkillVlaue,ele.skillValue])
               })
               this.$nextTick(()=>{
@@ -751,9 +968,6 @@ export default {
               })
           }
       },
-      handleClick1(tab){
-          console.log( this.activeName1 );
-      },
       showBindStep2(){
           this.bind1Visible = false;     
           this.$refs.bind1Form.resetFields();
@@ -770,18 +984,86 @@ export default {
           })
       },
       refuseWait(){
-          this.waitIngVisible = false;
+          let target = this.multipleSelection.map(ele=>{
+              return ele.id
+          });
+          let data = {
+              status:2,
+              recommendIds:target,
+          };
+          this.ApiLists.switchEmpStatus(data).then(res=>{
+              let { data,respCode } = res;
+              if( respCode === 0 ){
+                  this.$message({
+                      message: '已拒绝',
+                      type: 'success'
+                  });
+                  this.analyseCurrent();
+                  this.initSearch();
+                  this.waitIngVisible = false;
+              }
+          }).catch(err=>{
+              console.log('err',err);
+          })
+      },
+      handleClick1(tab){
+          this.gender2 = '';
+          this.settle2ment = '';
+          this.first2Age = '';
+          this.sec2Age = '';
+          this.skill2 = '';
+          this.wait2Name = '';
+          this.attribute2 = '';
+          this.fetchRecommandList();
+          this.fetchSpSkills();
+      },
+      fetchSpSkills(){
+          let params = {
+              customerId:this.wait3Form.partner,
+          };
+          if( this.getWebInfo.customerInfo.type == 1 ){
+              if(this.activeName1 == 'first'){
+                  params.ifBing = 1
+              }else{
+                  params.ifBing = 0
+              }
+          }    
+          this.ApiLists.fetchTalentSkills(params).then(res=>{
+              let { data,respCode } = res;
+              if( respCode === 0 ){
+                  if( data ){
+                      let bridge = data || [];
+                      this.option2s8 = [{ skillName: "标签",skillValue: "" },...bridge];
+                  }
+              }
+          }).catch(err=>{
+              console.log('err',err);
+          })
       },
       fetchRecommandList(){
           let params = {
               customerId:this.wait3Form.partner,
-              pageNum:0,
-              pageSize:0,
+              pageNum:1,
+              pageSize:100000,
+              sex:this.gender2,
+              settlementType:this.settle2ment,
+              firstAge:this.first2Age,
+              secAge:this.sec2Age,
+              skill:this.skill2,
+              talentName:this.wait2Name,
+              attributeId:this.attribute2,
           };
           let typeMap = {
               1:'talentSmallCus',
               2:'talentsCus',
           };
+          if( this.getWebInfo.customerInfo.type == 1 ){
+              if(this.activeName1 == 'first'){
+                  params.ifBing = 1
+              }else{
+                  params.ifBing = 0
+              }
+          }
           this.ApiLists[typeMap[this.getWebInfo.customerInfo.type]](params).then(res=>{
               let { data,respCode } = res;
               if( respCode === 0 ){
@@ -812,17 +1094,61 @@ export default {
               console.log('err',err);
           })  
           this.assignOptions();
+          this.fetchSpSkills();
           this.fetchRecommandList();
       },
       handle2CurrentChange(){
           
       },
       confirm2Wait(){
-
+          let idArr = this.multiple2Selection.map(ele=>{
+              return ele.talentId
+          });
+          let data = {
+              talentIds:idArr,
+              customerId:this.wait3Form.partner,
+          };   
+          this.ApiLists.talentRecommend(data).then(res=>{
+              let { data,respCode } = res;
+              if( respCode === 0 ){
+                  this.$message({
+                      message: '推荐成功',
+                      type: 'success'
+                  });
+                  this.recomand2Visible = false;
+              }
+          }).catch(err=>{
+              console.log('err',err);
+          }) 
+      },
+      confirm2CopyWait(){
+          let idArr = this.multiple2Selection.map(ele=>{
+              return ele.talentId
+          });
+          let data = {
+              talentIds:idArr,
+              customerId:this.wait3Form.partner,
+          };   
+          this.ApiLists.talentRecommend(data).then(res=>{
+              let { data,respCode } = res;
+              if( respCode === 0 ){
+                  this.$message({
+                      message: '推荐成功',
+                      type: 'success'
+                  });
+                  this.recomand2CopyVisible = false;
+              }
+          }).catch(err=>{
+              console.log('err',err);
+          }) 
       },
       wait3FormAction(){
           this.recomand1Visible = false;
-          this.recomand2Visible = true;
+          if( this.getWebInfo.customerInfo.type == 1 ){
+              this.recomand2CopyVisible = true;
+          }else{
+              this.recomand2Visible = true;
+          }
           this.initOptions4();
           this.initRecommand();
       },
@@ -836,7 +1162,7 @@ export default {
           })
       },
       wait2FormAction(){
-          let params = {
+          let data = {
               status:'1',
               settlementType:this.wait2Form.settlementType,
               attributeId:this.wait2Form.attribute,
@@ -844,31 +1170,31 @@ export default {
           let track = this.options2.find(ele=>{
               return ele.id == this.wait2Form.attribute;
           })
-          params.attributeName = track.attributeName;
+          data.attributeName = track.attributeName;
           let recommand = this.multipleSelection.map(ele=>{
               return ele.id
           })          
-          params.recommendIds = recommand;
-          console.log( 'params',params );
-       /*   this.ApiLists.switchEmpStatus(params).then(res=>{
+          data.recommendIds = recommand;
+          this.ApiLists.switchEmpStatus(data).then(res=>{
               let { data,respCode } = res;
               if( respCode === 0 ){
                   this.$message({
-                      message: '设置成功',
+                      message: '接收成功',
                       type: 'success'
                   });
+                  this.analyseCurrent();
+                  this.initSearch();
                   this.waitIng2Visible = false;
               }
           }).catch(err=>{
               console.log('err',err);
-          })  */
+          })  
       },
       submitwait2Form(formName){
           this.$refs[formName].validate(valid => {
               if (valid) {
                   this.wait2FormAction();
               }else{
-                  
               }
           })
       },
@@ -914,10 +1240,10 @@ export default {
           this.option2s5 = tempArr;
       },
       age2SecChange(age){
-          this.wait2Fetch();
+          this.fetchRecommandList();
       },
       wait2Fetch(){
-        
+          this.fetchRecommandList();
       },
       waitFetch(){
           this.waitCurrent = 1;
@@ -962,7 +1288,6 @@ export default {
               let { data,respCode } = res;
               if( respCode === 0 ){
                   this.waitTableData = data.talentInfoPage.list ||[];
-                  this.waitTotalIds = data.talents ||[];
               }
           }).catch(err=>{
               console.log('err',err);
@@ -993,7 +1318,6 @@ export default {
                   if( data ){
                       let bridge = data || [];
                       this.options8 = [{ skillName: "标签",skillValue: "" },...bridge];
-                      this.option2s8 = [{ skillName: "标签",skillValue: "" },...bridge];
                   }
               }
           }).catch(err=>{
@@ -1023,6 +1347,8 @@ export default {
               }
               if( this.getWebInfo.customerInfo.type == 1 ){
                   this.showPersonal = true;
+                  this.showYellow = false;
+                  this.yellowNumber = 0;
               }
           }
       },
@@ -1042,10 +1368,17 @@ export default {
               console.log('err',err);
           })
       },
-      normalItem(item){
-          this.$router.push({
-              name: 'contactsBlockDetail',
-              query:item
+      normalItem(item,index){
+          if( index == (this.contentArr.length - 1) ){
+              item.notPartner = '2';
+          }else{
+              item.notPartner = '1';
+          }
+          this.$nextTick(()=>{
+              this.$router.push({
+                  name: 'contactsBlockDetail',
+                  query:item
+              });
           });
       },
       initSearch(){
@@ -1113,21 +1446,41 @@ export default {
           })
       },
       bindPartner(){
-          this.bind3Visible = true;
-          this.ApiLists.getBindingCode().then(res=>{
-              let { data,respCode } = res;
-              if( respCode === 0 ){
-                  if( data ){
-                      this.bindCode = data;
+          if( this.getWebInfo.customerInfo.type == 1 ){
+              this.bind3CopyVisible = true;
+              this.matrix1 = '';
+              this.matrix2 = '';
+              this.matrix3 = '';
+              this.matrix4 = '';
+              this.matrix5 = '';
+              this.matrix6 = '';
+              this.$nextTick(()=>{
+                  this.$refs.track1.focus();
+              });
+          }
+          if( this.getWebInfo.customerInfo.type == 2 ){
+              this.bind3Visible = true;
+              this.ApiLists.getBindingCode().then(res=>{
+                  let { data,respCode } = res;
+                  if( respCode === 0 ){
+                      if( data ){
+                          this.bindCode = data;
+                      }
                   }
-              }
-          }).catch(err=>{
-              console.log('err',err);
-          })
+              }).catch(err=>{
+                  console.log('err',err);
+              })
+          }
       },
       popAdd(){
-          this.bind1Visible = true;
-          this.setOption2();
+          if( this.getWebInfo.customerInfo.type == 1 ){
+              this.generateAddCode();
+              this.bind2Visible = true;
+          }
+          if( this.getWebInfo.customerInfo.type == 2 ){
+              this.bind1Visible = true;
+              this.setOption2();
+          }
       },
   }
 }
@@ -1145,11 +1498,80 @@ export default {
                 overflow-y: scroll;
             }
         }
+        .editUpperConCopy {
+            height: 200px;
+            .subEditUpper {
+                height: 150px;
+                width: 460px;
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
+        }
+        .type1Block {
+            box-sizing: border-box;
+            width:64px;
+            height:24px;
+            background:rgba(144,147,153,0.1);
+            border-radius:4px;
+            border:1px solid rgba(144,147,153,0.1);
+            color: #909399;
+            font-size: 12px;
+            text-align: center;
+            line-height: 24px;
+            margin-right: 10px;
+        }
+        .ageBlock {
+            margin-right: 10px;
+        }
+        .settleBlock {
+            box-sizing: border-box;
+            width:40px;
+            height:24px;
+           background:rgba(64,158,255,0.1);
+           border-radius:4px;
+           border:1px solid rgba(64,158,255,0.1);
+           color: #409EFF;
+           font-size: 12px;
+           text-align: center;
+           line-height: 24px;
+        }
         .codeCon {
+            .multipleInput {
+                display: flex;
+                justify-content: space-between;
+                align-content: center;
+                align-items: center;
+                .inputItem {
+                    width: 60px;
+                    height: 80px;
+                    border-bottom: 1px solid #DCDFE6;
+                    box-sizing: border-box;
+                    input {
+                        width: 58px;
+                        height: 78px;
+                        border: none;
+                        text-align: center;
+                        font-size: 40px;
+                        color: #303133;    
+                    }
+                }
+                
+            }
             .describe {
                 color: #909399;
                 font-size: 14px;
                 line-height: 14px;
+            }
+            .describeCopy {
+                color: #909399;
+                font-size: 14px;
+                line-height: 14px;
+                margin-bottom: 40px;
+            }
+            .boldBind {
+                color: #303133;
+                font-size: 20px;
+                margin-bottom: 20px;
             }
             .codeSelf {
                 color: #409EFF;
@@ -1252,9 +1674,6 @@ export default {
                 justify-content: flex-start;
                 align-content: center;
                 align-items: center;
-                border-bottom: 1px solid #E4E7ED;
-                padding-bottom: 20px;
-                box-sizing: border-box;
             }
             .itemForHead {
                 width: 56px;
@@ -1274,6 +1693,7 @@ export default {
                     align-items: center;
                     margin-bottom: 16px;
                     .type0Block {
+                        box-sizing: border-box;
                         width:64px;
                         height:24px;
                         background:rgba(144,147,153,0.1);
@@ -1315,6 +1735,9 @@ export default {
                 align-content: center;
                 align-items: center;
                 padding-top: 20px;
+                border-top: 1px solid #E4E7ED;
+                box-sizing: border-box;
+                margin-top: 20px;
             }
         }
         .type1Con {
@@ -1351,67 +1774,7 @@ export default {
                         font-weight: 500;
                         margin-right: 20px;    
                     }
-                    .type1Block {
-                        width:64px;
-                        height:24px;
-                        background:rgba(144,147,153,0.1);
-                        border-radius:4px;
-                        border:1px solid rgba(144,147,153,0.1);
-                        color: #909399;
-                        font-size: 12px;
-                        text-align: center;
-                        line-height: 24px;
-                        margin-right: 10px;
-                    }
-                    .ageBlock {
-                        margin-right: 10px;
-                        font-size: 12px;
-                        text-align: center;
-                        line-height: 24px;
-                        .genderImg {
-                            width: 12px;
-                            height: 12px;
-                            background-origin: border-box;
-                            background-repeat: no-repeat;
-                            background-size:cover;
-                            background-position: center;
-                            display: inline-block;
-                            vertical-align:-2px;
-                        }
-                        .gender1 {
-                            background-image: url(../../../assets/male.svg);
-                        }
-                        .gender2 {
-                            background-image: url(../../../assets/female.svg);
-                        }
-                    }
-                    .age1 {
-                        width:63px;
-                        height:24px;
-                        background:rgba(65,131,255,0.1);
-                        border-radius:4px;
-                        border:1px solid rgba(64,158,255,0.1);
-                        color: #409EFF;
-                    }
-                    .age2 {
-                        width:63px;
-                        height:24px;
-                        background:rgba(245,108,108,0.1);
-                        border-radius:4px;
-                        border:1px solid rgba(245,108,108,0.1);
-                        color: #EE4F46;
-                    }
-                    .settleBlock {
-                        width:40px;
-                        height:24px;
-                        background:rgba(64,158,255,0.1);
-                        border-radius:4px;
-                        border:1px solid rgba(64,158,255,0.1);
-                        color: #409EFF;
-                        font-size: 12px;
-                        text-align: center;
-                        line-height: 24px;
-                    }
+                    
                 }
                 .type1UpperSec {
                     display: flex;
@@ -1582,6 +1945,15 @@ export default {
                 height: 520px;
             }
         }
+        .setRoot41Scoped {
+            .el-dialog {
+                border-radius: 10px;
+                height: 540px;
+            }
+            .el-dialog__body {
+                padding-top: 0;
+            }
+        }
         .setRoot5Scoped {
             .el-dialog {
                 border-radius: 10px;
@@ -1603,10 +1975,22 @@ export default {
                 height: 320px;
             }
         }
+        .setRoot7CopyScoped {
+            .el-dialog {
+                border-radius: 10px;
+                height: 340px;
+            }
+        }
         .setRoot8Scoped {
             .el-dialog {
                 border-radius: 10px;
                 height: 430px;
+            }
+        }
+        .setRoot8CopyScoped {
+            .el-dialog {
+                border-radius: 10px;
+                height: 280px;
             }
         }
     }  

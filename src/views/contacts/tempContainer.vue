@@ -1,12 +1,26 @@
 <template>
   <div class="temp1Con">
-     
-      
+      <h1 class="mb20">临时页面，调试使用</h1>
       <el-button type="primary" @click="popNow">点击1</el-button>
+      <div class="mt20">
+          <template v-for="(item,index) in storeCurrentTarget.schedulingSettingVOList">
+          
+            <div class="mb20">
+              
+                <el-button type="primary" @click="popStartPunch(item)">开始打卡</el-button>
+      
+                <el-button type="primary" @click="popPunch(item)">结束打卡</el-button>
+              
+            </div>
+          
+        </template>
+    </div>
       
       
       
-      <el-dialog title="快捷添加人员"  class="setRoot7Scoped setMiddleDialog" :visible.sync="humanVisible"  width="480px" :close-on-click-modal="false" border>
+      
+      
+      <el-dialog title="快捷添加人员"  class="setRoot7Scoped setMiddleDialog" :visible.sync="humanVisible"  width="480px" :close-on-click-modal="false" border :class="{dynamicHeight:activeName1 != 'first' }">
           <div class="codeCon">
               <el-tabs class="tabWidth" v-model="activeName1" @tab-click="handleClick1">
                 <el-tab-pane label="验证码" name="first"></el-tab-pane>
@@ -28,10 +42,10 @@
         <div v-if="activeName1 == 'second'" key="'idForm'">
             <el-form :model="idForm" label-position="left" ref="idForm" label-width="120px" class="demo-ruleForm" :rules="idRules" key="'idForm'">
                 <el-form-item label="身份证号" prop="id">
-                        <el-input v-model="idForm.id" size="small" placeholder="请输入要添加人员的身份证号" maxLength="20"></el-input>
+                        <el-input v-model.trim="idForm.id" size="small" placeholder="请输入要添加人员的身份证号" maxLength="20"></el-input>
                     </el-form-item>
             </el-form>
-            <div class="btnIdCon"><el-button type="primary" size="small" @click="idNext('idForm')">下一步</el-button></div>
+            <div class="btnIdCon"><el-button type="primary" size="small" :disabled="!idForm.id" @click="idNext('idForm')">下一步</el-button></div>
         </div>
               <div v-if="activeName1 == 'third'" key="'qrForm'">
                 <el-form :model="qrForm" label-position="left" ref="qrForm" label-width="120px" class="demo-ruleForm" :rules="qrRules">
@@ -59,7 +73,7 @@
                                 已选中{{multiple2Selection.length}}人
                             </template>
                             <template slot-scope="scope">
-                                {{scope.row.realNameAlias}}
+                                {{scope.row.talentNameAlias}}
                             </template>
                         </el-table-column>
                         <el-table-column label="">
@@ -79,7 +93,9 @@
                         </el-table-column>
                         <el-table-column label="">
                             <template slot-scope="scope">
-                                <div class="">删除</div>
+                                <div>
+                                    <el-button type="text" size="small" @click="popDelete(scope.row)">删除</el-button>
+                                </div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -134,12 +150,34 @@
                 <div class="btnIdCon"><el-button type="primary" size="small" @click="qrErrorVisible = false">我知道了</el-button></div>
             </div>
         </el-dialog>
-
-
-
-
-
-
+        <el-dialog title="扫码打卡"  class="setRoot10Scoped setMiddleDialog" :visible.sync="scanVisible"  width="480px" :close-on-click-modal="false" border>
+            <div class="scanText">现在生成的二维码，无论人员何时扫码，其打卡时间均为</div>
+            <div class="scanTime">{{punchQrForm.time}}</div>
+            <div class="btnIdCon">
+                <el-button type="info" size="small" @click="scanVisible = false">暂不打卡</el-button>
+                <el-button type="primary" size="small" @click="scanPunchNext">继续打卡</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog title="扫码打卡"  class="setRoot11Scoped setMiddleDialog" :visible.sync="qrScanVisible"  width="480px" :close-on-click-modal="false" border>
+            <div class="qrDivCon">
+                <div class="qrFirstline">
+                    <div class="qrTitle">打卡工种</div>
+                    <div class="qrContent">{{punchQrForm.industryName}}</div>
+                </div>
+                <div class="spSecondline">
+                    <div class="qrTitle">打卡类型</div>
+                    <div class="qrContent">{{punchQrForm.type}}</div>
+                </div>
+                <div class="spThirdline">
+                    <div class="qrTitle">打卡时间</div>
+                    <div class="qrContent">{{punchQrForm.time}}</div>
+                </div>
+                <div class="qrcon">
+                    <img class="hugeQr" :src="punchSrc">
+                    <div>请让人员使用万才个人版APP扫码</div>
+                </div>
+            </div>
+        </el-dialog>
   </div>
 </template>
 <script>
@@ -147,6 +185,10 @@ export default {
   name: 'temp1Con',
     data(){
         return {
+            punchType:1,
+            punchSrc:'',
+            qrScanVisible:false,
+            scanVisible:false,
             errText:'该技能标签开始打卡时间未设置，无法生成二维码',
             qrNormalVisible:false,
             qrErrorVisible:false,
@@ -160,12 +202,8 @@ export default {
                     { required: true, message: '请输入身份证号', trigger: 'blur' },
                 ]
             },
-            id2Rules:{
-                
-            },
-            id2Form:{
-                
-            },
+            id2Rules:{},
+            id2Form:{},
             qrForm:{
                 skill:'',
             },
@@ -186,7 +224,17 @@ export default {
             currentTaskInfo:{},
             tempSrc:'',
             tempForm:{
-                
+                realNameAlias:'',
+                idCard:'',
+                sex:'',
+                talentId:'',
+            },
+            punchQrForm:{
+                industryName:'',
+                type:'',
+                time:'23',
+                industry:'',
+                currentTime:'',
             },
         }
     },
@@ -194,6 +242,241 @@ export default {
         this.initFetch();
     },
     methods:{
+        generatePunchSrc(){
+            let str = '';
+            let option = {
+                version:9,
+            }
+             if( this.punchType == 1 ){
+                 let obj1 = {
+                     type: '2',
+                     state:{
+                         c: this.punchQrForm.currentTime,
+                         id: this.storeCurrentTarget.id,
+                         ind: this.punchQrForm.industry,
+                         t: this.punchQrForm.time,
+                         type: '1',
+                     }
+                 };
+                 str = JSON.stringify(obj1);
+                 str = window.btoa(unescape(encodeURIComponent(str)));
+                 this.QRCode.toDataURL(str,option, (err, url)=> {
+                    this.punchSrc = url
+                 })
+             }else{
+                 let obj2 = {
+                     type: '2',
+                       state:{
+                          c: this.punchQrForm.currentTime,
+                          id: this.storeCurrentTarget.id,
+                          ind: this.punchQrForm.industry,
+                          t: this.punchQrForm.time,
+                          type: '2',
+                      }
+                 };
+                 str = JSON.stringify(obj2);
+                 str = window.btoa(unescape(encodeURIComponent(str)));
+                 this.QRCode.toDataURL(str,option, (err, url)=> {
+                    this.punchSrc = url
+                 })
+             }  
+        },
+        scanPunchNext(){
+            this.scanVisible = false;
+            this.qrScanVisible = true;
+            this.generatePunchSrc();
+        },
+        popStartPunch(item){
+            this.punchType = 1;
+            if( (this.storeCurrentTarget.priceCheckStatus != 1) || (this.storeCurrentTarget.priceCheckStatus != 4) ){
+                this.$message({
+                    message: '单价审核未通过，无法打卡。',
+                    type: 'error'
+                });
+            }else{
+                this.ApiLists.getCurrentTime().then(res=>{
+                    let { data,respCode } = res;
+                    if( respCode == 0 ){
+                        let currentTime = data;
+                        if( this.storeCurrentTarget.punchTimeManageSwitch && !item.startTimeSet ){
+                            this.$message({
+                                message: '请先设置开始打卡时间。',
+                                type: 'error'
+                            });
+                        }
+                        let workTime = '';
+                        if( this.storeCurrentTarget.punchTimeManageSwitch ){
+                            workTime = item.startTimeSet;
+                        }else{
+                            workTime = `${this.storeCurrentTarget.schedulingDate} ${item.workStartTime}`;
+                        }
+                        let resHours = 0;
+                        resHours = this.currentTaskInfo.startPunchLimit / 60; 
+                        let mixTime =  new Date(workTime).getTime();
+                        let diff = mixTime - currentTime;
+                        let stableDiff = this.currentTaskInfo.startPunchLimit*60*1000;
+                        if( diff < stableDiff ){
+                            if( workTime > currentTime ){
+                                this.punchQrForm = {
+                                    industryName:item.industryName,
+                                    type:'开始打卡',
+                                    time:this.Dayjs(workTime).format('YYYY-MM-DD HH:mm:ss'),
+                                    industry:item.industry,
+                                    currentTime
+                                };
+                                this.scanVisible = true;
+                            }else{
+                                let temp2 = this.timeProcesser(currentTime);
+                                this.punchQrForm = {
+                                    industryName:item.industryName,
+                                    type:'开始打卡',
+                                    time:this.Dayjs(temp2).format('YYYY-MM-DD HH:mm:ss'),
+                                    industry:item.industry,
+                                    currentTime
+                                };
+                                this.scanVisible = true;
+                            }
+                        }else{
+                            this.$message({
+                                message: `开始打卡时间前${resHours}小时才允许打卡`,
+                                type: 'error'
+                            });
+                        }                    
+                    }
+                }).catch(err=>{
+                    console.log('err',err);
+                })  
+            }
+        },
+        timeProcesser(currentTime){
+            let temp2 = '';
+            let afterFormatStr = this.Dayjs(currentTime).format('YYYY-MM-DD HH:mm:ss');
+            let afterArr = afterFormatStr.split(':');
+            let [ first,second,third ] = afterArr;
+            let subArr = first.split(' ');
+            let [subFirst,subSecond] = subArr;
+            let diffMin = 0;
+            if( (+second > 0)&&(+second < 30 ) ){
+                diffMin = 30 - second;
+            }
+            if( +second > 30 ){
+                diffMin = 60 - second;
+            }
+            let regeneMinute = String(+second + diffMin);
+            let rewriteTime = `${subFirst} ${subSecond}:${regeneMinute}:00`;
+            temp2 = rewriteTime; 
+            return this.Dayjs(temp2).format('YYYY-MM-DD HH:mm:ss');
+        },
+        popPunch(item){
+            this.punchType = 2;
+            let endHours = 0;
+            endHours = this.currentTaskInfo.endPunchLimit / 60; 
+            if( (this.storeCurrentTarget.priceCheckStatus != 1) || (this.storeCurrentTarget.priceCheckStatus != 4) ){
+                return this.$message({
+                    message: '单价审核未通过，无法打卡。',
+                    type: 'error'
+                });
+            }else{
+                this.ApiLists.getCurrentTime().then(res=>{
+                    let { data,respCode } = res;
+                    if( respCode == 0 ){
+                        let currentTime = data;
+                        let workTime = `${this.storeCurrentTarget.schedulingDate} ${item.workEndTime}`;
+                        let workDate = new Date(workTime).getTime();
+                        let workEndTime = '';
+                        if( this.storeCurrentTarget.endWorkType == 2 ){
+                            let part = workDate + 24*60*60*1000;
+                            workDate = part; 
+                        }
+                        if( this.storeCurrentTarget.punchTimeManageSwitch ){
+                            if( item.endTimeSet ){
+                                workEndTime = item.endTimeSet;
+                            }else{
+                                workEndTime = workTime;
+                            }
+                        }else{
+                            workEndTime = workTime; 
+                        }   
+                        let diff = workDate - currentTime;
+                        let stableDiff = this.currentTaskInfo.endPunchLimit*60*1000;
+                        if( diff > stableDiff ){
+                            return this.$message({
+                                message: `已超出结束打卡时间${endHours}小时，不可打卡`,
+                                type: 'error'
+                            });
+                        }
+                        if( this.storeCurrentTarget.punchTimeManageSwitch ){
+                            if( !item.endTimeSet ){
+                                if( workDate > currentTime ){
+                                    let temp2 = this.timeProcesser(currentTime);
+                                    this.punchQrForm = {
+                                        industryName:item.industryName,
+                                        type:'结束打卡',
+                                        time:temp2,
+                                        industry:item.industry,
+                                        currentTime
+                                    };
+                                    this.scanVisible = true;
+                                }else{
+                                    return this.$message({
+                                        message: '请先设置结束打卡时间。',
+                                        type: 'error'
+                                    });
+                                }
+                            }else{                        
+                                let endFlag = new Date(item.endTimeSet).getTime();
+                                if( endFlag > currentTime ){
+                                    let temp2 = this.timeProcesser(currentTime);
+                                    this.punchQrForm = {
+                                        industryName:item.industryName,
+                                        type:'结束打卡',
+                                        time:temp2,
+                                        industry:item.industry,
+                                        currentTime
+                                    };
+                                    this.scanVisible = true;
+                                }else{
+                                    this.punchQrForm = {
+                                        industryName:item.industryName,
+                                        type:'结束打卡',
+                                        time:item.endTimeSet,
+                                        industry:item.industry,
+                                        currentTime
+                                    };
+                                    this.scanVisible = true;
+                                }
+                            }
+                        }else{
+                            if( workDate > currentTime ){
+                                let temp2 = this.timeProcesser(currentTime);
+                                this.punchQrForm = {
+                                    industryName:item.industryName,
+                                    type:'结束打卡',
+                                    time:temp2,
+                                    industry:item.industry,
+                                    currentTime
+                                };
+                                this.scanVisible = true;
+                            }else{
+                                this.punchQrForm = {
+                                    industryName:item.industryName,
+                                    type:'结束打卡',
+                                    time:workEndTime,
+                                    industry:item.industry,
+                                    currentTime
+                                };
+                                this.scanVisible = true;
+                            }
+                        }                    
+                    }
+                }).catch(err=>{
+                    console.log('err',err);
+                })
+            }
+        },
+        popDelete(row){
+            console.log(row);
+        },
         normalShowQrcode(target){
             this.qrNormalVisible = true;
             this.generateAddCode(target);            
@@ -214,21 +497,7 @@ export default {
                     if( diff > 0 ){
                         temp2 = temp1;
                     }else{
-                        let afterFormatStr = this.Dayjs(currentTime).format('YYYY-MM-DD HH:mm:ss');
-                        let afterArr = afterFormatStr.split(':');
-                        let [ first,second,third ] = afterArr;
-                        let subArr = first.split(' ');
-                        let [subFirst,subSecond] = subArr;
-                        let diffMin = 0;
-                        if( (+second > 0)&&(+second < 30 ) ){
-                            diffMin = 30 - second;
-                        }
-                        if( +second > 30 ){
-                            diffMin = 60 - second;
-                        }
-                        let regeneMinute = String(+second + diffMin);
-                        let rewriteTime = `${subFirst} ${subSecond}:${regeneMinute}:00`;
-                        temp2 = rewriteTime;
+                        temp2 = this.timeProcesser(currentTime);
                     }
                     if( this.currentTaskInfo.punchType == 1 ){
                         let obj1 = {
@@ -333,14 +602,31 @@ export default {
             console.log( 'find2',find2 );
             
             
-            
-            
-            
 //            this.PriceForAdd();
 //            console.log( this.PricePlugin(find1.salary) );
         },
         idStep2Action(){
-            
+            let find1 = this.skillArr.find(ele=>{
+                return ele.industry == this.id2Form.skill;
+            })
+            let params1 = {
+                schedulingId:this.storeCurrentTarget.id,
+                talentId:this.tempForm.talentId,
+                industry:this.id2Form.skill,
+                industryName:find1.industryName,
+                isScan:false,
+            };
+            this.ApiLists.schedulFastAddEmp(params1).then(res=>{
+                let { respCode,data } = res;
+                if( respCode == 0 ){
+                    this.$message({
+                        message: '添加成功',
+                        type: 'success'
+                    });
+                }
+            }).catch(err=>{
+                console.log('err',err);
+            })
         },
         id2Next(formName){
             this.$refs[formName].validate((valid) => {
@@ -370,6 +656,7 @@ export default {
                                 this.tempForm.realNameAlias = data.realNameAlias;
                                 this.tempForm.idCard = data.idCard;
                                 this.tempForm.sex = data.sex;
+                                this.tempForm.talentId = data.id;
                             }else{
                                 this.$message({
                                     message: '身份证号对应的人员不存在',
@@ -569,6 +856,25 @@ export default {
             font-size: 14px;
             line-height: 22px;
         }
+        .spSecondline {
+            display: flex;
+            justify-content: flex-start;
+            align-content: center;
+            align-items: center;
+            padding-left: 60px;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
+        .spThirdline {
+            display: flex;
+            justify-content: flex-start;
+            align-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-left: 60px;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
         .qrSecondline {
             display: flex;
             justify-content: flex-start;
@@ -604,6 +910,34 @@ export default {
             line-height: 14px;
             margin-bottom: 30px;
         }
+        .spIconCon {
+            display: flex;
+            justify-content:flex-start;
+            align-content: center;
+            align-items: center;
+        }
+        .scanText {
+            color: #909399;
+            font-size: 14px;
+            line-height: 14px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+        .scanTime {
+            color: #F56C6C;
+            font-size: 20px;
+            line-height: 20px;
+            margin-bottom: 10px;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -618,6 +952,11 @@ export default {
             }
             .el-dialog__body {
                 padding-top: 0;
+            }
+        }
+        .dynamicHeight {
+            .el-dialog {
+                height: 240px !important;
             }
         }
         .setRoot6Scoped {
@@ -654,6 +993,23 @@ export default {
                 height: 180px;
             }
         }
-        
+        .setRoot10Scoped {
+            .el-dialog {
+                border-radius: 10px;
+                height: 180px;
+            }
+            .el-dialog__body {
+                padding-top: 0;
+            }
+        }
+        .setRoot11Scoped {
+            .el-dialog {
+                border-radius: 10px;
+                height: 590px;
+            }
+            .el-dialog__body {
+                padding-top: 0;
+            }
+        }
     }
 </style>

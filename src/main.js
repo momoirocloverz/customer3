@@ -14,6 +14,7 @@ import CusTable from '@/components/cusTable.vue';
 import companyLogo from '@/components/companyLogo.vue';
 import personalLogo from '@/components/personalLogo.vue';
 import multipleRoles from '@/components/multipleRoles.vue';
+import gender from '@/components/gender.vue';
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 import * as filters from './utils/filters';
@@ -35,6 +36,7 @@ Vue.component('CusTable', CusTable);
 Vue.component('CompanyLogo', companyLogo);
 Vue.component('PersonalLogo', personalLogo);
 Vue.component('MultipleRoles', multipleRoles);
+Vue.component('Gender', gender);
 
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
 Vue.filter('priceFor', priceFor)

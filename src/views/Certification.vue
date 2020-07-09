@@ -43,13 +43,13 @@
                 <el-form ref="simple2Form" :label-position="labelPosition" :model="simple2Form" :rules="simple2Rules">
                     <div>
                         <el-form-item prop="idCard" label="身份证号">
-                            <el-input v-model="simple2Form.idCard" placeholder="请输入身份证号" autocomplete="new-password"></el-input>
+                            <el-input v-model.trim="simple2Form.idCard" placeholder="请输入身份证号" autocomplete="new-password"></el-input>
                         </el-form-item>
                         <el-form-item prop="realName" label="真实姓名">
-                            <el-input v-model="simple2Form.realName" placeholder="请输入真实姓名" type="text" autocomplete="new-password"></el-input>
+                            <el-input v-model.trim="simple2Form.realName" placeholder="请输入真实姓名" type="text" autocomplete="new-password"></el-input>
                         </el-form-item>
                         <el-form-item  label="手机号">
-                            <el-input v-model="simple2Form.mobile" placeholder="请输入手机号" type="text" autocomplete="new-password" disabled></el-input>
+                            <el-input v-model.trim="simple2Form.mobile" placeholder="请输入手机号" type="text" autocomplete="new-password" disabled></el-input>
                         </el-form-item>
                     </div>
                     <div>

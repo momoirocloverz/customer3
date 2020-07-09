@@ -1,5 +1,5 @@
 <template>
-  <div class="contactsBlockCon">
+  <div class="contactsBlockCon" v-loading="loading">
       <div class="breadCon">
           <el-breadcrumb separator="/">
               <el-breadcrumb-item @click.native="clickHere">通讯录</el-breadcrumb-item>
@@ -19,7 +19,7 @@
                         <el-option v-for="(item,index) in options3" :key="item.value"  :label="item.label"  :value="item.value"></el-option>
                     </el-select>
                 </div>
-                <div class="firstRight">
+                <div class="firstRight" @keyup.enter="commonFetch">
                     <el-input v-model.trim="name" size="small" class="lockItemInput" placeholder="请输入姓名进行搜索" maxLength="30" clearable><el-button slot="append" icon="el-icon-search" @click="commonFetch"></el-button></el-input>
                 </div>
             </div>
@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="listCon">
-            <div v-if="$route.query.attributeId">
+            <div v-if="$route.query.notPartner == 1">
                 <template v-for="(item,index) in resultArr">
                     <div class="resItemCon">
                         <div>    
@@ -45,12 +45,10 @@
                                     <div class="type1UpperFirst">
                                         <div class="type1DeatailCon">
                                             <div class="type1RealName">{{item.realNameAlias}}</div>
-                                            <div class="ageBlock" :class=" 'age'+item.sex ">
-                                                <div class="genderImg"  :class=" 'gender'+item.sex "></div> {{ String(item.age)+'岁'}}
-                                            </div>
-                                            <div class="type1Block">{{item.attributeName}}</div>
-
-                                            <div class="settleBlock">{{item.settlementTypeName}}</div>
+                                            <Gender :item="item" class="ageBlock" />
+                                            
+                                            <div class="type1Block" v-if="getWebInfo.customerInfo.type == 2">{{item.attributeName}}</div>
+                                            <div class="settleBlock" v-if="getWebInfo.customerInfo.type == 2">{{item.settlementTypeName}}</div>
                                         </div>
                                         <div class="type1PhoneOuter">
                                             <i class="el-icon-phone mr10"></i>{{item.mobile}}
@@ -96,7 +94,7 @@
                                                 <div class="type0RealName">{{item.customerName}}</div>
                                                 <div class="type0Block">合作伙伴</div>
                                             </div>
-                                            <div class="type0PhoneOuter"><i class="el-icon-phone mr10"></i>{{item.mobile}}</div>
+                                            <div class="type0PhoneOuter" v-if="getWebInfo.customerInfo.type == 2"><i class="el-icon-phone mr10"></i>{{item.mobile}}</div>
                                         </div>
                                         <div class="type0bindTime">
                                             <span class="mr20">绑定时间</span>
@@ -104,7 +102,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="type0Sec">
+                                <div class="type0Sec" v-if="getWebInfo.customerInfo.type == 2">
                                     <el-popover placement="left"  width="100" trigger="hover">
                                         <div style="margin-top:10px;text-align:center">确定删除“{{item.customerName}}”?</div>
                                         <div style="margin-top:10px;text-align:center">
@@ -142,6 +140,55 @@
               :total="totalSp">
             </el-pagination>
         </div>
+
+
+    <el-dialog title="修改"  class="setRoot8Scoped setMiddleDialog" :visible.sync="editVisible"  width="480px" :close-on-click-modal="false" border>
+        <div class="editUpperCon">
+        <el-form ref="editForm" :model="editForm" :rules="editRules" label-width="140px">
+            <div class="subEditUpper">
+            <el-form-item label="姓名">
+                <div>{{editForm.name}}</div>
+            </el-form-item>
+            <el-form-item label="结算周期">
+                <el-select v-model="editForm.settlementType" placeholder="请选择结算周期" class="setInput1Width">
+                    <el-option v-for="(item,index) in options3" :key="item.value"  :label="item.label"  :value="item.value"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="属性">
+                <el-select v-model="editForm.attributeId" placeholder="请选择属性" class="setInput1Width">
+                    <el-option v-for="(item,index) in options2" :key="item.id"  :label="item.attributeName"  :value="item.id"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item prop="skill" label="技能标签(最多3个)">
+                <el-cascader size="small" class="setInput1Width"  v-model="editForm.skill" :props="props" @change="cascaderChange" :options="optionsCopy8" :show-all-levels="false" filterable></el-cascader>
+            </el-form-item>
+            </div>
+            <div class="spFlexBtn2">
+                <el-button type="primary" size="small" @click="submitEditForm('editForm')">确定修改</el-button>
+            </div>
+        </el-form>
+            </div>
+    </el-dialog>
+      <el-dialog title="修改"  class="setRoot8CopyScoped setMiddleDialog" :visible.sync="editCopyVisible"  width="480px" :close-on-click-modal="false" border>
+        <div class="editUpperConCopy">
+        <el-form ref="editForm" :model="editForm" :rules="editRules" label-width="140px">
+            <div class="subEditUpper">
+            <el-form-item label="姓名">
+                <div>{{editForm.name}}</div>
+            </el-form-item>
+            <el-form-item prop="skill" label="技能标签(最多3个)">
+                <el-cascader size="small" class="setInput1Width"  v-model="editForm.skill" :props="props" @change="cascaderChange" :options="optionsCopy8" :show-all-levels="false" filterable></el-cascader>
+            </el-form-item>
+            </div>
+            <div class="spFlexBtn2">
+                <el-button type="primary" size="small" @click="submitEditForm('editForm')">确定修改</el-button>
+            </div>
+        </el-form>
+            </div>
+    </el-dialog>
+
+
+
   </div>
 </template>
 <script>
@@ -149,7 +196,25 @@
 export default {
   name: 'contactsBlock',
   data() {
+      var validateEditSkill = (rule, value, callback) => {
+          if( this.editForm.skill.length ){
+              if( this.editForm.skill.length>3 ){
+                  callback(new Error('技能标签最多3个'));
+              }else{
+                  callback();
+              }
+          }else{
+              callback(new Error('请选择技能标签'));
+          }
+      };
     return {
+        editCopyVisible:false,
+        loading:true,
+        props: { 
+            multiple: true
+        },
+        optionsCopy8:[],
+        editVisible:false,
         totalSp:0,
         total:0,
         name:'',
@@ -176,6 +241,20 @@ export default {
         options5:[],
         resultArr:[],
         resultSpArr:[],
+        editForm:{
+            bindId:'',
+            talentId:'',
+            name:'',
+            settlementType:'',
+            attributeId:'',
+            skill:'',
+        },
+        editRules:{
+            skill:[
+                { required: true, message: '请选择技能标签', trigger: 'change' },
+                { validator: validateEditSkill, trigger: 'blur' }
+            ],
+        },
     }
   },
     computed:{
@@ -200,32 +279,203 @@ export default {
       this.initOptions2();
   },
   methods: {
+      submitEditAction(){
+          let params = {
+              bindId:this.editForm.bindId,
+              settlementType:this.editForm.settlementType,
+              talentId:this.editForm.talentId,
+              attributeId:this.editForm.attributeId,
+          };
+          let empty = [];
+          let [first,second,third] = this.editForm.skill;
+          if( first ){
+              let find1 = this.optionsCopy8.find(ele=>{
+                  return first[0] == ele.dicVal
+              })
+              let findSon1 = find1.children.find(ele=>{
+                  return first[1] == ele.dicVal
+              })
+             empty.push({
+                 skillValue:findSon1.dicVal,
+                 skillName:findSon1.dicName,
+              });
+          }
+           if( second ){
+              let find2 = this.optionsCopy8.find(ele=>{
+                  return second[0] == ele.dicVal
+              })
+              let findSon2 = find2.children.find(ele=>{
+                  return second[1] == ele.dicVal
+              })
+               empty.push({
+                 skillValue:findSon2.dicVal,
+                 skillName:findSon2.dicName,
+              });
+          }
+          if( third ){
+              let find3 = this.optionsCopy8.find(ele=>{
+                  return third[0] == ele.dicVal
+              })
+              let findSon3 = find3.children.find(ele=>{
+                  return third[1] == ele.dicVal
+              })
+               empty.push({
+                 skillValue:findSon3.dicVal,
+                 skillName:findSon3.dicName,
+              });
+          }
+          params.empCustomerSkills = empty;
+          if(this.getWebInfo.customerInfo.type  == 2){
+              this.ApiLists.talentUpdateAttr(params).then(res=>{
+                  let { data,respCode } = res;
+                  if( respCode === 0 ){
+                      this.$message({
+                          message: '修改成功',
+                          type: 'success'
+                      });
+                      this.editVisible = false;
+                      this.initFetch();
+                  }
+              }).catch(err=>{
+                  console.log('err',err);
+              })
+          }
+          if(this.getWebInfo.customerInfo.type  == 1){
+              this.ApiLists.talentUpdateSkill(params).then(res=>{
+                  let { data,respCode } = res;
+                  if( respCode === 0 ){
+                      this.$message({
+                          message: '修改成功',
+                          type: 'success'
+                      });
+                      this.editCopyVisible = false;
+                      this.initFetch();
+                  }
+              }).catch(err=>{
+                  console.log('err',err);
+              })
+          } 
+      },
+      submitEditForm(formName){
+          this.$refs[formName].validate(valid => {
+              if (valid) {
+                  this.submitEditAction();
+              }else{
+                  
+              }
+          })
+      },
+      cascaderChange(value){
+          if( value.length >= 3 ){
+              this.optionsCopy8.forEach(ele=>{
+                  ele.disabled = true;
+              })
+              let [first,second,third] = value;
+              let track1 = this.optionsCopy8.find(ele=>{
+                  return ele.value == first[0];
+              })
+              let track2 = this.optionsCopy8.find(ele=>{
+                  return ele.value == second[0];
+              })
+              let track3 = this.optionsCopy8.find(ele=>{
+                  return ele.value == third[0];
+              })
+              let trackSub1 = track1.children.find(ele=>{
+                  return ele.value == first[1];
+              })
+              let trackSub2 = track2.children.find(ele=>{
+                  return ele.value == second[1];
+              })
+              let trackSub3 = track3.children.find(ele=>{
+                  return ele.value == third[1];
+              })              
+              track1.disabled = false;
+              track2.disabled = false;
+              track3.disabled = false;
+              track1.children.forEach(ele=>{
+                  ele.disabled = true;
+              })
+              track2.children.forEach(ele=>{
+                  ele.disabled = true;
+              })
+              track3.children.forEach(ele=>{
+                  ele.disabled = true;
+              })    
+              trackSub1.disabled = false;
+              trackSub2.disabled = false;
+              trackSub3.disabled = false;
+          }else{
+              this.optionsCopy8.forEach(ele=>{
+                  ele.disabled = false;
+                  ele.children.forEach(subEle=>{
+                      subEle.disabled = false;
+                  })
+              })
+          }
+      },
+      setOption2(){
+          let params = {
+              customerId:this.getWebInfo.customerId,
+              pageNum:0,
+              pageSize:0,
+          };
+          this.ApiLists.orgrimarAttributeList(params).then(res=>{
+              let { data,respCode } = res;
+              if( respCode === 0 ){
+                  this.options2 = data.list || [];
+              }
+          }).catch(err=>{
+              console.log('err',err);
+          })  
+      },
       editCurrentItem(item){
-          console.log( 'item',item );
-          
-          
-/*          clearTimeout(window.mixContimer1);
-          this.editVisible = true;
+          clearTimeout(window.mixContimer2);
+          if( this.getWebInfo.customerInfo.type == 1 ){
+              this.editCopyVisible = true;
+          }
+          if( this.getWebInfo.customerInfo.type == 2 ){
+              this.editVisible = true;
+          }
           this.setOption2();
-          this.assignOptions();
           this.editForm.bindId = item.bindId;
           this.editForm.talentId = item.talentId;
           this.editForm.name = item.realNameAlias;
           this.editForm.settlementType = item.settlementType;
           this.editForm.attributeId = item.attributeId;
           this.getIndustryArr();
-          window.mixContimer1 = setTimeout(()=>{
+          window.mixContimer2 = setTimeout(()=>{
               let temp = [];
-              item.empCustomerVOS.forEach(ele=>{
+              item.empCustomerVOS && item.empCustomerVOS.forEach(ele=>{
                   temp.push([ele.parentSkillVlaue,ele.skillValue])
               })
               this.$nextTick(()=>{
                   this.editForm.skill  =  temp;
               });
-          },600);   */
-          
-          
-          
+          },600);   
+      },
+      getIndustryArr(){
+          let skillparams = {
+              pageNum:0,
+              pageSize:0,
+              customerId:this.getWebInfo.customerId,
+          }
+          this.ApiLists.customerIndustry(skillparams).then(res => {
+            let { data,respCode } = res;
+              if( respCode === 0 ){
+                  data[0].sonNode.forEach(ele=>{
+                      ele.label = ele.dicName;
+                      ele.value = ele.dicVal;
+                      ele.sonNode.forEach(subele=>{
+                          subele.label = subele.dicName;
+                          subele.value = subele.dicVal;
+                      });
+                      ele.children = ele.sonNode;
+                  });
+                   this.optionsCopy8 = data[0].sonNode;
+              }
+          }).catch(err=>{
+              console.log('err',err);
+          })
       },
       jumpToDetail(item){
           const { href } = this.$router.resolve({
@@ -330,6 +580,7 @@ export default {
               skill:this.skill,
               talentName:this.name
           };
+          this.loading = true;
           this.ApiLists.fetchContactsTalents(params).then(res=>{
               let { data,respCode } = res;
               if( respCode === 0 ){
@@ -340,6 +591,8 @@ export default {
               }
           }).catch(err=>{
               console.log('err',err);
+          }).finally(() => {
+              this.loading = false
           })
       },
       partnerFetch(){
@@ -349,6 +602,7 @@ export default {
               customerId:this.getWebInfo.customerId,
               type:this.getWebInfo.customerInfo.type == 1 ? 2 : 1,
           };
+          this.loading = true;
           this.ApiLists.getPartnerList(params).then(res=>{
               let { data,respCode } = res;
               if( respCode === 0 ){
@@ -359,10 +613,12 @@ export default {
               }
           }).catch(err=>{
               console.log('err',err);
+          }).finally(() => {
+              this.loading = false
           })
       },
       initFetch(){
-          if( this.$route.query.attributeId ){
+          if( this.$route.query.notPartner == '1' ){
               this.normalFetch();
           }else{
               this.partnerFetch();
@@ -386,6 +642,24 @@ export default {
         box-sizing: border-box;
         height: 100%;
         min-height: calc(100vh - 80px);
+        .editUpperCon {
+            height: 300px;
+            .subEditUpper {
+                height: 280px;
+                width: 460px;
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
+        }
+        .spFlexBtn2 {
+            display: flex;
+            justify-content: flex-end;
+            align-content: center;
+            align-items: center;
+        }
+        .setInput1Width {
+            width: 300px;
+        }
         .breadCon {
             margin-bottom: 30px;
         }
@@ -397,6 +671,8 @@ export default {
             text-align: center;
             font-size: 14px;
             color: #909399;
+            margin-top: 40px;
+            margin-bottom: 40px;
         }
         .type0Con {
             padding: 20px;
@@ -408,9 +684,6 @@ export default {
                 justify-content: flex-start;
                 align-content: center;
                 align-items: center;
-                border-bottom: 1px solid #E4E7ED;
-                padding-bottom: 20px;
-                box-sizing: border-box;
             }
             .itemForHead {
                 width: 56px;
@@ -430,6 +703,7 @@ export default {
                     align-items: center;
                     margin-bottom: 16px;
                     .type0Block {
+                        box-sizing: border-box;
                         width:64px;
                         height:24px;
                         background:rgba(144,147,153,0.1);
@@ -471,6 +745,9 @@ export default {
                 align-content: center;
                 align-items: center;
                 padding-top: 20px;
+                border-top: 1px solid #E4E7ED;
+                box-sizing: border-box;
+                margin-top: 20px;
             }
         }
         .type1Con {
@@ -508,6 +785,7 @@ export default {
                         margin-right: 20px;    
                     }
                     .type1Block {
+                        box-sizing: border-box;
                         width:64px;
                         height:24px;
                         background:rgba(144,147,153,0.1);
@@ -521,43 +799,9 @@ export default {
                     }
                     .ageBlock {
                         margin-right: 10px;
-                        font-size: 12px;
-                        text-align: center;
-                        line-height: 24px;
-                        .genderImg {
-                            width: 12px;
-                            height: 12px;
-                            background-origin: border-box;
-                            background-repeat: no-repeat;
-                            background-size:cover;
-                            background-position: center;
-                            display: inline-block;
-                            vertical-align:-2px;
-                        }
-                        .gender1 {
-                            background-image: url(../../../assets/male.svg);
-                        }
-                        .gender2 {
-                            background-image: url(../../../assets/female.svg);
-                        }
-                    }
-                    .age1 {
-                        width:63px;
-                        height:24px;
-                        background:rgba(65,131,255,0.1);
-                        border-radius:4px;
-                        border:1px solid rgba(64,158,255,0.1);
-                        color: #409EFF;
-                    }
-                    .age2 {
-                        width:63px;
-                        height:24px;
-                        background:rgba(245,108,108,0.1);
-                        border-radius:4px;
-                        border:1px solid rgba(245,108,108,0.1);
-                        color: #EE4F46;
                     }
                     .settleBlock {
+                        box-sizing: border-box;
                         width:40px;
                         height:24px;
                         background:rgba(64,158,255,0.1);
@@ -632,4 +876,20 @@ export default {
             
         }
     }
+</style>
+<style lang="scss">
+    .contactsBlockCon { 
+        .setRoot8Scoped {
+            .el-dialog {
+                border-radius: 10px;
+                height: 430px;
+            }
+        }
+        .setRoot8CopyScoped {
+            .el-dialog {
+                border-radius: 10px;
+                height: 280px;
+            }
+        }
+    }     
 </style>

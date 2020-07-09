@@ -35,6 +35,23 @@
                     </div>
                 </div>
             </div>
+            <div class="whiteConBottom" v-if="getWebInfo.customerInfo.type == 1">
+                <div class="name">服务企业相关信息</div>
+                <div class="setMargin">
+                    <div class="trinityItem">
+                        <div class="subTrinity">企业</div>
+                        <div class="subTrinity">结算周期</div>
+                        <div class="subTrinity">属性</div>
+                    </div>
+                    <template v-for="(item) in holderArr">
+                        <div class="trinityItem">
+                            <div class="subTrinity">{{item.customerName}}</div>
+                            <div class="subTrinity">{{item.settlementTypeName}}</div>
+                            <div class="subTrinity">{{item.attributeName}}</div>
+                        </div>
+                    </template>
+                </div>
+            </div>
         </div>
   </div>
 </template>
@@ -46,6 +63,7 @@ export default {
     return {
         mainData:{},
         showBottom:false,
+        holderArr:[],
     }
   },
     computed:{
@@ -70,8 +88,6 @@ export default {
           if( this.getWebInfo.customerInfo.type == 2 ){
               this.showBottom = false;
           }
-          
-          
           let params = {
               talentId:this.$route.query.talentId
           };
@@ -79,6 +95,7 @@ export default {
               let { data,respCode } = res;
               if( respCode === 0 ){
                   this.mainData = data;
+                  this.holderArr = data.serviceCustomerVOS || [];
               }
           }).catch(err=>{
               console.log('err',err);
@@ -95,6 +112,29 @@ export default {
         min-height: calc(100vh - 80px);
         .breadCon {
             margin-bottom: 30px;
+        }
+        .setMargin {
+            margin-top: 30px;
+        }
+        .trinityItem {
+            display: flex;
+            justify-content: space-between;
+            align-content: center;
+            align-items: center;
+            .subTrinity {
+                width: 33.333%;
+                height: 50px;
+                line-height: 50px;
+                font-size: 14px;
+                color: #909399;
+            }
+            .contentTrinity {
+                width: 33.333%;
+                height: 50px;
+                line-height: 50px;
+                font-size: 14px;
+                color: #606266;
+            }
         }
         .detailCon {
             .itemForHead {
@@ -118,12 +158,20 @@ export default {
                 font-size: 20px;
                 font-weight: 500;
             }
-            .whiteCon {
+            .whiteConBottom {
                 background:rgba(255,255,255,1);
                 box-shadow:0px 4px 8px -2px rgba(0,0,0,0.05);
                 border-radius:8px;
                 box-sizing: border-box;
                 padding: 30px 40px;
+                margin-top: 20px;
+            }
+            .whiteCon {
+                background:rgba(255,255,255,1);
+                box-shadow:0px 4px 8px -2px rgba(0,0,0,0.05);
+                border-radius:8px;
+                box-sizing: border-box;
+                padding: 30px 40px 40px;
                 .infoFirst {
                     color: #606266;
                     font-size: 14px;
