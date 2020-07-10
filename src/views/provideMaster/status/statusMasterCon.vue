@@ -543,7 +543,6 @@
                 this.$router.push({
                     path:'/main/provideMaster'
                 });
-                this.$store.commit('changeMenuActiveIndex', '2');
             },
             cancelCurrentOrder(){
                 this.cancelVisible = false;
@@ -572,7 +571,6 @@
                             this.$router.push({
                                 path:'/main/provideMaster'
                             });
-                            this.$store.commit('changeMenuActiveIndex', '2');
                         }
                     }).catch(err=>{
                         console.log('err',err);
@@ -712,7 +710,6 @@
                         this.$router.push({
                             path:'/main/provideMaster'
                         });
-                        this.$store.commit('changeMenuActiveIndex', '2')
                     }
                 }).catch(err=>{
                     console.log('err',err);
@@ -902,7 +899,6 @@
                                                 this.$router.push({
                                                     path:'/main/provideMaster'
                                                 });
-                                                 this.$store.commit('changeMenuActiveIndex', '2')
                                             }
                                         }).catch(err=>{
                                             console.log('err',err);
